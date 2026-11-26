@@ -106,7 +106,8 @@ No desktop, três colunas. No celular, sequência de telas com botão de voltar.
 
 ### Configurações da loja
 
-- Nome, logo, frase de apresentação e slug.
+- Nome, frase de apresentação e slug.
+- **Identidade visual da vitrine:** logo, **cor principal** (seletor de cor com prévia ao vivo e aviso se o contraste ficar ruim) e **foto de capa**.
 - **Horário de atendimento** por dia da semana (aberto/fechado, início e fim).
 - **Antecedência mínima padrão** em dias.
 - **Modalidades:** entrega, retirada ou ambas.
@@ -144,11 +145,28 @@ Entidades: **lojas, membros da equipe, categorias, produtos, grupos de opções,
 
 ## 7. Design
 
-Duas experiências relacionadas: **a vitrine dá vontade de encomendar; o painel ajuda a responder rápido.**
+Duas experiências com identidades diferentes: **a vitrine tem a cara da loja e dá vontade de encomendar; o painel tem a cara do Retoma e ajuda a responder rápido.**
 
-- **Vitrine:** fundo claro e acolhedor, fotos grandes dos doces, preços legíveis e o botão de pedido em destaque.
-- **Painel:** fundo neutro, navegação lateral no desktop e inferior no celular, composição compacta, com destaque para não lidas e para a conversa aberta.
-- Paleta: **rosa-queimado ou terracota** como cor principal, **creme** nas superfícies e **marrom-escuro ou grafite** no texto. Cores de apoio só para estados (sucesso, erro, atenção).
+### Vitrine: identidade da loja
+
+- A vitrine usa a **logo, a cor principal e a foto de capa** configuradas pela loja. A cor principal aparece em botões, links, abas ativas e no botão do chat.
+- O restante é fixo, para a vitrine nunca ficar feia com qualquer cor escolhida: superfícies **creme (#FBF6F0)**, texto **cacau (#3B2A25)**, espaçamentos e cantos arredondados. Gere automaticamente as variações da cor principal (hover, fundo suave) e escolha texto claro ou escuro sobre ela pelo contraste.
+- **Sempre clara**, sem modo escuro (fotos de comida ficam piores no escuro).
+- **Tipografia:** **Fraunces** nos títulos (nome da loja, títulos de seção e nome do produto na página do produto) e **Inter** em todo o resto, inclusive preços, datas e formulários. Sem fontes manuscritas ou cursivas.
+- **Catálogo:** grade de **2 colunas no celular** e **3 a 4 no desktop**, com foto quadrada, nome e preço. Categorias em **abas roláveis** no topo, fixas ao rolar. Foto de capa da loja com logo e frase curta acima da grade, sem empurrar os produtos para muito longe.
+- Fotos grandes, preços legíveis e o botão de pedido em destaque.
+- Rodapé discreto: **"Atendimento por Retoma"**.
+
+### Painel: identidade do Retoma
+
+- Visual **neutro e calmo**: fundo **off-white (#F7F7F5)**, superfícies brancas, bordas e textos secundários em **cinza quente**, texto principal **grafite (#1F2421)** e destaque em **verde-oliva (#5B6B3A)** para ações principais, item ativo do menu e indicadores de não lida.
+- **Modo escuro** no painel, seguindo o tema do sistema, com alternância manual em Configurações.
+- **Tipografia:** só **Inter**.
+- Navegação lateral no desktop e inferior no celular, composição compacta, com destaque para não lidas e para a conversa aberta.
+
+### Regras gerais
+
+- Cores de apoio só para estados (sucesso, erro, atenção), iguais nas duas experiências.
 - Português do Brasil em toda a interface: moeda **R$ 180,00**, quantidades **1.000 unidades**, datas **sáb., 14/12**.
 - Rótulos curtos, sem slogans genéricos nem métricas decorativas. Explicações só onde há decisão real (para que serve o contato, a diferença entre "a partir de" e preço fechado).
 - Contraste adequado, foco visível, rótulos em todos os campos, navegação por teclado e alvos de toque confortáveis.
@@ -157,7 +175,7 @@ Duas experiências relacionadas: **a vitrine dá vontade de encomendar; o painel
 
 ## 8. Dados de demonstração
 
-Loja **Doceria Horizonte** (slug `doceria-horizonte`), com horário de terça a sábado, das 9h às 18h, antecedência padrão de 2 dias e entrega e retirada habilitadas.
+Loja **Doceria Horizonte** (slug `doceria-horizonte`), com cor principal **terracota suave (#C8664B)**, logo simples e foto de capa de uma mesa de doces, horário de terça a sábado, das 9h às 18h, antecedência padrão de 2 dias e entrega e retirada habilitadas.
 
 Categorias e produtos, com fotos coerentes:
 

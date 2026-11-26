@@ -48,6 +48,17 @@ Os dois primeiros são medidos automaticamente pelo Retoma (visitas por origem, 
 | Q25 | **LGPD:** frase curta no formulário, página de política de privacidade e botão **Excluir dados do contato** |
 | Q26 | Painel instalável como **PWA**. Domínio próprio só quando houver loja piloto |
 
+## Visual
+
+| # | Decisão |
+|---|---|
+| Q28 | **Vitrine com a identidade da loja** (logo, cor principal e foto de capa configuráveis; o resto fixo). **Painel com a identidade do Retoma.** Rodapé "Atendimento por Retoma" |
+| Q29 | Painel **neutro e calmo**: off-white, cinza quente, grafite e destaque **verde-oliva (#5B6B3A)** |
+| Q30 | Demo Doceria Horizonte: **terracota suave (#C8664B)**, fundo **creme (#FBF6F0)**, texto **cacau (#3B2A25)** |
+| Q31 | **Fraunces** nos títulos da vitrine, **Inter** no resto; painel só com Inter. Sem fontes cursivas |
+| Q32 | Catálogo em **grade de 2 colunas no celular** (3 a 4 no desktop), categorias em abas roláveis |
+| Q33 | **Modo escuro só no painel**; vitrine sempre clara |
+
 ## Fase 2: funil e agenda
 
 - Kanban: **Novo Lead → Primeiro Contato → Proposta → Ganho → Perdido**. O cartão passa para **Primeiro Contato** na primeira resposta do vendedor.
