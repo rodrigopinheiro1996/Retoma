@@ -141,3 +141,31 @@ O que aproveitamos:
    - nada avisa quando é hora de retomar um orçamento parado.
 3. **Concorrente brasileiro mais caro:** a Clint custa de R$ 523 a R$ 1.177 por mês, inclui a API oficial do WhatsApp e é voltada a infoprodutores. 🏢 [Clint](https://www.clint.digital/blog/crm-custo-beneficio-infoprodutores-whatsapp-2026/)
 4. **Novo sinal, do lado do comprador:** há reclamações no Reclame Aqui de clientes ignorados por confeitarias depois de chamar no WhatsApp. 🗣️ [Reclame Aqui](https://www.reclameaqui.com.br/confeitaria-bem-feitus-ltda/empresa-ignora-cliente-apos-contato-via-whatsapp-desconsiderando-a-propaganda-e-adorando-politica-restritiva_T6DqhmRoOQApBvbr/)
+
+## Etapa 3: a venda do bolo acompanhada do início ao fim
+
+![Comparação dos caminhos](img/etapa3-caminhos.png)
+
+Foram comparados quatro caminhos:
+
+- **A)** O atendimento continua no WhatsApp, e a vendedora registra tudo à mão no CRM.
+- **B)** O atendimento acontece num chat próprio dentro da vitrine.
+- **C)** O atendimento continua no WhatsApp, conectado ao CRM pela API da Meta.
+- **D)** O comprador preenche um link de pedido, o pedido vira um cartão no CRM e a conversa segue no WhatsApp.
+
+### Custos e exigências da API da Meta
+
+Levantamento de 27/11/2026. As fontes são provedores de WhatsApp, e os valores divergem entre eles.
+
+- **Cobrança por mensagem desde julho de 2025.** Depois de 24 horas sem resposta do cliente, só é possível enviar modelos de mensagem aprovados pela Meta, e cada um é pago. Os valores informados no Brasil vão de cerca de R$ 0,035 a 0,04 para mensagens de utilidade e de R$ 0,32 a 0,38 para mensagens de marketing. [chatmaxima](https://chatmaxima.com/pt-br/whatsapp-api-pricing/brazil/), [aisensy](https://m.aisensy.com/blog/pt/atualizacao-preco-whatsapp-api-outubro-2026/)
+- **Mensagens de atendimento passam a ser cobradas.** A partir de 1/10/2026, as respostas dentro da janela de 24 horas custam a partir da 1.001ª mensagem do mês. Um provedor informa R$ 0,035 por mensagem. [aisensy](https://m.aisensy.com/blog/pt/atualizacao-preco-whatsapp-api-outubro-2026/)
+- **Exigências para um SaaS:** ser aprovado como Tech Provider da Meta, manter um servidor de webhooks e usar o Embedded Signup. Cada loja cadastra sua própria forma de pagamento na Meta. A "coexistência" permite que a loja continue usando o app normal do WhatsApp Business no mesmo número. [Meta for Developers](https://developers.facebook.com/documentation/business-messaging/whatsapp/embedded-signup/onboarding-business-app-users)
+- **Concorrentes nesse caminho:** Kommo, Clint (de R$ 523 a R$ 1.177 por mês), SocialHub e JivoChat.
+
+### Conclusão da etapa 3
+
+- O produto gera valor em dois momentos:
+  - **quando o pedido entra sozinho**;
+  - **no dia certo de retomar o contato**, quando a mensagem já aparece pronta.
+- O produto vira "mais uma tela" quando a vendedora precisa digitar cada interessado.
+- O caminho D resolve a maior parte disso sem a API e sem custo por mensagem. Hipótese a testar: os compradores aceitam preencher o link.

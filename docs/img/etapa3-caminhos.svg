@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1290" height="526" font-family="Arial, sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="20" y="36" font-size="24" font-weight="bold" fill="#222">A venda do bolo: o que acontece sozinho em cada caminho</text>
+<text x="280.0" y="70" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">1. Ana pede</text>
+<text x="280.0" y="90" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">preço no Direct</text>
+<text x="460.0" y="70" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">2. Bia demora</text>
+<text x="460.0" y="90" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">a responder</text>
+<text x="640.0" y="70" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">3. Bia manda</text>
+<text x="640.0" y="90" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">o orçamento</text>
+<text x="820.0" y="70" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">4. Ana some</text>
+<text x="820.0" y="90" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">(2 dias)</text>
+<text x="1000.0" y="70" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">5. Bia retoma</text>
+<text x="1000.0" y="90" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">a conversa</text>
+<text x="1180.0" y="70" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">6. Pix do sinal</text>
+<text x="1180.0" y="90" font-size="15" text-anchor="middle" fill="#222" font-weight="bold">ou desistência</text>
+<text x="20" y="140" font-size="15" fill="#222" font-weight="bold">A) WhatsApp +</text>
+<text x="20" y="160" font-size="15" fill="#222" font-weight="bold">CRM manual</text>
+<rect x="194" y="114" width="172" height="66" rx="10" fill="#e0a800"/>
+<text x="280.0" y="153.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">depende dela</text>
+<rect x="374" y="114" width="172" height="66" rx="10" fill="#e0a800"/>
+<text x="460.0" y="153.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">depende dela</text>
+<rect x="554" y="114" width="172" height="66" rx="10" fill="#e0a800"/>
+<text x="640.0" y="153.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">depende dela</text>
+<rect x="734" y="114" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="820.0" y="153.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="914" y="114" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="1000.0" y="153.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="1094" y="114" width="172" height="66" rx="10" fill="#e0a800"/>
+<text x="1180.0" y="153.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">depende dela</text>
+<text x="20" y="214" font-size="15" fill="#222" font-weight="bold">B) Chat próprio</text>
+<text x="20" y="234" font-size="15" fill="#222" font-weight="bold">na vitrine</text>
+<rect x="194" y="188" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="280.0" y="227.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="374" y="188" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="460.0" y="227.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="554" y="188" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="640.0" y="227.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="734" y="188" width="172" height="66" rx="10" fill="#d9443c"/>
+<text x="820.0" y="227.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">risco de perder</text>
+<rect x="914" y="188" width="172" height="66" rx="10" fill="#e0a800"/>
+<text x="1000.0" y="227.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">depende dela</text>
+<rect x="1094" y="188" width="172" height="66" rx="10" fill="#e0a800"/>
+<text x="1180.0" y="227.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">depende dela</text>
+<text x="20" y="288" font-size="15" fill="#222" font-weight="bold">C) WhatsApp</text>
+<text x="20" y="308" font-size="15" fill="#222" font-weight="bold">com API da Meta</text>
+<rect x="194" y="262" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="280.0" y="301.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="374" y="262" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="460.0" y="301.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="554" y="262" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="640.0" y="301.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="734" y="262" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="820.0" y="301.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="914" y="262" width="172" height="66" rx="10" fill="#3f6fd1"/>
+<text x="1000.0" y="301.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático, pago</text>
+<rect x="1094" y="262" width="172" height="66" rx="10" fill="#e0a800"/>
+<text x="1180.0" y="301.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">depende dela</text>
+<text x="20" y="362" font-size="15" fill="#222" font-weight="bold">D) Link de pedido</text>
+<text x="20" y="382" font-size="15" fill="#222" font-weight="bold">+ WhatsApp</text>
+<rect x="194" y="336" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="280.0" y="375.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="374" y="336" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="460.0" y="375.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="554" y="336" width="172" height="66" rx="10" fill="#e0a800"/>
+<text x="640.0" y="375.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">depende dela</text>
+<rect x="734" y="336" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="820.0" y="375.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="914" y="336" width="172" height="66" rx="10" fill="#2e9e5b"/>
+<text x="1000.0" y="375.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">automático</text>
+<rect x="1094" y="336" width="172" height="66" rx="10" fill="#e0a800"/>
+<text x="1180.0" y="375.0" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">depende dela</text>
+<rect x="20" y="446" width="22" height="22" rx="4" fill="#2e9e5b"/><text x="50" y="463" font-size="15" fill="#222">Acontece sozinho, de graça</text>
+<rect x="320" y="446" width="22" height="22" rx="4" fill="#e0a800"/><text x="350" y="463" font-size="15" fill="#222">Depende da Bia lembrar ou digitar</text>
+<rect x="620" y="446" width="22" height="22" rx="4" fill="#d9443c"/><text x="650" y="463" font-size="15" fill="#222">Alto risco de perder a venda</text>
+<rect x="920" y="446" width="22" height="22" rx="4" fill="#3f6fd1"/><text x="950" y="463" font-size="15" fill="#222">Sozinho, mas cada mensagem custa</text>
+</svg>
