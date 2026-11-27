@@ -97,3 +97,19 @@ Ideias aproveitadas como hipóteses:
 1. Cobrar um **preço fixo por loja**, e não por vendedor.
 2. Não enviar e-mails nem mensagens pelo nosso servidor. Em vez disso, usar links `wa.me` e notificações no celular ou no navegador.
 3. Registrar o **motivo de perda** de cada venda.
+
+### Segunda rodada da /last30days (27/11/2026, período de 28/10 a 27/11/2026)
+
+- **Fontes que funcionaram:** Reddit (17 tópicos, quase todos do r/empreendedorismo), TikTok (5 vídeos) e Hacker News (12 tópicos).
+- **Fontes que falharam:** o YouTube pediu verificação de robô e o Instagram ficou sem chave de acesso.
+- **Veredito da ferramenta:** "Nothing solid this window". Nenhum item passou no filtro de relevância.
+
+Leitura manual dos itens:
+
+1. **Não apareceu nenhum vendedor reclamando de orçamento esquecido.** No r/empreendedorismo, quem publica são principalmente pessoas criando negócios ou produtos.
+2. **As frases do Hacker News que o Gemini citou vêm de um tópico chamado "Do not build your own CRM" ("Não construa seu próprio CRM").** São comentários de programadores num debate, e não reclamações de clientes. [HN 50485793](https://news.ycombinator.com/item?id=50485793)
+3. **Surgiu um concorrente gratuito para quem trabalha sozinho:** o Hermit CRM, um CRM gratuito e de código aberto. [HN 50609708](https://news.ycombinator.com/item?id=50609708)
+4. **Um relato brasileiro recente de micro-SaaS de nicho:** um desenvolvedor que trabalha sozinho conta que chegou a 16 assinantes depois de "nichar extremamente forte" em vez de competir com ferramentas genéricas. [r/empreendedorismo](https://www.reddit.com/r/empreendedorismo/comments/1y3ha1w/validei_um_microsaas_de_nicho_narrador_de_ia_para/)
+5. **Clientes que param de responder viraram tema de vídeos de vendas,** com pouco alcance. [TikTok](https://www.tiktok.com/@thiagoconcer/video/7709573048021585172)
+
+Conclusão: nos últimos 30 dias, não há evidência pública de que vendedores busquem ou paguem por uma solução para esse problema. Isso não prova que a dor não exista, porque esses vendedores conversam mais no Instagram e em grupos de WhatsApp, que a ferramenta não alcança. A prova precisa vir das entrevistas.
