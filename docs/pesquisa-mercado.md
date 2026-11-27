@@ -121,3 +121,23 @@ Conclusão: nos últimos 30 dias, não há evidência pública de que vendedores
 - **Item útil:** [r/CRMSoftware, 5/11/2026](https://www.reddit.com/r/CRMSoftware/comments/1xoazga/are_businesses_losing_more_revenue_from_missed/). Um usuário conta: "perdemos alguns trabalhos quando nosso orçamentista recebia 40 a 50 mensagens de WhatsApp por dia e perdia o controle de quem pediu o quê; achávamos uma conversa de 3 semanas atrás que tinha morrido no meio". É um relato real, mas de uma empresa estrangeira com equipe, e não de um vendedor que trabalha sozinho.
 - **Concorrente brasileiro:** o canal [Rumo CRM](https://www.youtube.com/watch?v=ONZIVbMFvIY) publicou em 27/11/2026 um vídeo sobre "cliente sumiu depois do orçamento". O vídeo teve apenas 2 visualizações.
 - **Ajuste para as próximas buscas:** usar busca por palavra-chave sem hashtags genéricas, ou indicar perfis específicos de confeiteiras e lojistas.
+
+### Revisão das 3 buscas do Gemini (confeiteira, lojista do Instagram, etiquetas e planilha)
+
+- O próprio Gemini reconhece que as comunidades não trouxeram evidência suficiente. Tudo o que ele apresenta vem de páginas da web.
+- **As fontes são, em sua maioria, empresas que vendem CRM para WhatsApp:** Clint (UseClint), Waseller, Fleap, SocialHub e CuboSuite. Os links levam à página inicial de cada site, e não ao artigo citado.
+- **Portal 6:** não encontramos o artigo citado.
+- **O rodapé não é o original da ferramenta:** foi editado à mão. Ele traz frases que a ferramenta não gera e um bloco quebrado.
+
+O que aproveitamos:
+
+1. **Como funciona hoje o "CRM improvisado" (descrição feita pelos fornecedores):**
+   - nome do contato padronizado (`Ana | Bolo 3kg | Instagram`);
+   - etiquetas usadas como etapas da venda;
+   - planilha à parte com valor, data do último contato e data do próximo retorno.
+2. **Onde esse método falha (também segundo os fornecedores):**
+   - a planilha fica desatualizada;
+   - as conversas antigas somem no meio das novas;
+   - nada avisa quando é hora de retomar um orçamento parado.
+3. **Concorrente brasileiro mais caro:** a Clint custa de R$ 523 a R$ 1.177 por mês, inclui a API oficial do WhatsApp e é voltada a infoprodutores. 🏢 [Clint](https://www.clint.digital/blog/crm-custo-beneficio-infoprodutores-whatsapp-2026/)
+4. **Novo sinal, do lado do comprador:** há reclamações no Reclame Aqui de clientes ignorados por confeitarias depois de chamar no WhatsApp. 🗣️ [Reclame Aqui](https://www.reclameaqui.com.br/confeitaria-bem-feitus-ltda/empresa-ignora-cliente-apos-contato-via-whatsapp-desconsiderando-a-propaganda-e-adorando-politica-restritiva_T6DqhmRoOQApBvbr/)
