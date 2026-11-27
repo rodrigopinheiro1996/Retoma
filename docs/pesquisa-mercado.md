@@ -75,3 +75,25 @@ Pesquisa feita em 27/11/2026.
   - O vendedor aceita registrar cada interessado se isso levar cerca de 10 segundos.
   - O chat próprio vale a pena. As evidências atuais apontam que não.
 - **Próxima ação:** na etapa 3, acompanhar a venda de um bolo pelos dois caminhos.
+
+### Revisão da pesquisa do Gemini (/last30days)
+
+O Gemini rodou a `/last30days` sobre o tema "crm sales funnel micro saas", em inglês. Por isso as fontes são principalmente programadores e fundadores de SaaS no Hacker News, no r/SaaS e no r/micro_saas, ou seja, pessoas que **constroem** CRMs, e não donos de pequenos negócios brasileiros que **compram** um.
+
+Checagens feitas no GitHub em 27/11/2026:
+
+| Repositório citado | Estrelas | Licença | Observação |
+|---|---|---|---|
+| twentyhq/twenty | 61,5 mil | Não padrão (o GitHub não identifica a licença) | O Gemini informou cerca de 45 mil estrelas |
+| krayin/laravel-crm | 24,2 mil | MIT | O Gemini informou cerca de 1,1 mil estrelas |
+| frappe/crm | 4,0 mil | AGPL-3.0 | |
+| espocrm/espocrm | 3,7 mil | AGPL-3.0 | |
+| IAbrahanArley/branlycrm | 0 | Nenhuma | Projeto pessoal. Não serve como evidência de mercado |
+| kierantrestain/OVELIO | 0 | Nenhuma | Projeto pessoal. Não serve como evidência de mercado |
+| openfunnels/openfunnels | Não encontrado | Não se aplica | O repositório não existe ou é privado |
+
+Ideias aproveitadas como hipóteses:
+
+1. Cobrar um **preço fixo por loja**, e não por vendedor.
+2. Não enviar e-mails nem mensagens pelo nosso servidor. Em vez disso, usar links `wa.me` e notificações no celular ou no navegador.
+3. Registrar o **motivo de perda** de cada venda.
