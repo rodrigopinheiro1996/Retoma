@@ -4,7 +4,7 @@ Resultado da sessão de perguntas (grill-me) sobre o projeto. Cada item registra
 
 ## Visão
 
-O Retoma é uma **vitrine com chat próprio e CRM** para **confeitarias e encomendas de doces**. A loja divulga o link da vitrine pelo Instagram ou WhatsApp. O comprador escolhe um produto, pede um orçamento e conversa com a loja dentro do Retoma. O vendedor responde pelo painel e acompanha cada encomenda.
+O Retoma é um **CRM de vendas para pequenos negócios**, vendido como produto. Cada negócio tem sua vitrine, equipe e dados. O Retoma ajuda a loja a **receber pedidos de orçamento, conversar com os compradores e acompanhar cada orçamento até o fechamento**. O primeiro piloto é com uma **confeitaria**.
 
 **Proposta de valor:** nenhum pedido se perde, e a loja sabe em que pé está cada venda. Não pagar a Meta é um bônus, não o argumento principal, porque quem atende pelo app WhatsApp Business comum (sem API) já não paga por mensagem.
 
@@ -12,7 +12,7 @@ O Retoma é uma **vitrine com chat próprio e CRM** para **confeitarias e encome
 
 | # | Decisão | Motivo |
 |---|---|---|
-| Q1 | V1 para **uma única loja**, com `loja_id` em todas as tabelas | Mantém a v1 simples sem impedir que vire SaaS depois |
+| Q1 | **Várias lojas desde a v1** (revisado). Lojas criadas por um `/admin` da plataforma, sem cadastro público no piloto | O Retoma é um produto para vários negócios |
 | Q2 | Valor central = **organização** | A economia com a Meta é fraca para quem usa o app comum |
 | Q3 | **Ainda não há loja piloto** | A fase 1 serve de demonstração para prospectar |
 | Q4 | **E-mail obrigatório** no primeiro contato, com link mágico para reabrir a conversa | O comprador fecha o site e precisa saber que a resposta chegou, em qualquer aparelho |
@@ -29,6 +29,13 @@ O Retoma é uma **vitrine com chat próprio e CRM** para **confeitarias e encome
 3. A loja **continua usando após 30 dias** sem insistência.
 
 Os dois primeiros são medidos automaticamente pelo Retoma (visitas por origem, primeira mensagem, retorno pelo e-mail).
+
+## Revisão: fluxo centrado no orçamento
+
+- **Cada orçamento tem a sua conversa.** A cliente começa pelo **Pedir orçamento** na vitrine; não há chat solto sem pedido.
+- **Etapas:** Novo pedido → Em atendimento (automática na primeira resposta, que define a responsável) → Orçamento enviado → Confirmado / Perdido (com motivo). Mudança manual pela equipe já na fase 1, com histórico.
+- **Tela principal do painel:** caixa de conversas com os orçamentos vinculados, abrindo no filtro **Aguardando resposta**.
+- Substitui as etapas antigas (Novo Lead, Primeiro Contato, Proposta, Ganho, Perdido) e os itens das fases 2 e 3 abaixo onde houver conflito.
 
 ## Fase 1: vitrine, chat, inbox e produtos
 
@@ -61,7 +68,8 @@ Os dois primeiros são medidos automaticamente pelo Retoma (visitas por origem, 
 
 ## Fase 2: funil e agenda
 
-- Kanban: **Novo Lead → Primeiro Contato → Proposta → Ganho → Perdido**. O cartão passa para **Primeiro Contato** na primeira resposta do vendedor.
+- Kanban com as mesmas etapas da fase 1 (Novo pedido, Em atendimento, Orçamento enviado, Confirmado, Perdido).
+- **Fila de retornos.**
 - Selo **"Parado há X dias"** a partir de 3 dias sem atividade (configurável). Nada se move automaticamente (Q24).
 - "Assumir atendimento" e filtro "Minhas", se a loja pedir.
 - **Agenda** (Q20): encomendas ganhas agrupadas por data de entrega.
@@ -71,7 +79,6 @@ Os dois primeiros são medidos automaticamente pelo Retoma (visitas por origem, 
 - Proposta com **valor total, % de sinal e chave Pix em texto**, com botão "Copiar chave" (Q22).
 - O comprador envia o comprovante como foto; o vendedor marca **Sinal recebido** e depois **Ganho**.
 - Botão **Aceitar proposta** para o comprador (Q23).
-- **Perdido** exige motivo: Sem agenda na data, Preço, Sem resposta do cliente, Desistiu, Outro (Q23).
 - Histórico de etapas e arquivamento de produtos.
 
 ## Fora do escopo até o piloto

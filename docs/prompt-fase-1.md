@@ -4,209 +4,218 @@ Copie tudo abaixo da linha e cole no modo de criação do Lovable.
 
 ---
 
-Crie o **Retoma**, uma aplicação web em português do Brasil que reúne **vitrine pública de produtos, chat próprio em tempo real e painel de atendimento** para uma confeitaria que trabalha com encomendas. Implemente o fluxo completo, com telas funcionais, banco de dados, autenticação e permissões. Quero conseguir testar como comprador em uma janela anônima e como vendedor em outra.
+Crie o **Retoma**, um CRM de vendas para pequenos negócios, em português do Brasil. Cada negócio tem sua **vitrine pública**, sua **equipe** e seus **dados**, isolados dos outros. O Retoma ajuda a loja a **receber pedidos de orçamento, conversar com os compradores e acompanhar cada orçamento até o fechamento**.
 
-## 1. Objetivo
+O piloto é com uma confeitaria. Implemente o fluxo completo, com telas funcionais, banco de dados, autenticação e permissões. Quero testar como compradora em uma janela anônima e como vendedora em outra.
 
-A confeitaria divulga o link da vitrine pelo Instagram ou WhatsApp. O comprador abre o link no celular, escolhe um doce, pede um orçamento com data e opções e conversa com a loja **dentro do Retoma**. O vendedor responde pelo painel. Nenhum pedido pode se perder: se o comprador fechar a página, ele recebe um e-mail quando a loja responder e reabre a conversa em qualquer aparelho.
+## 1. O fluxo que precisa funcionar
 
-| Quem usa | O que precisa conseguir fazer |
-|---|---|
-| **Comprador** | Ver os produtos sem cadastro, pedir um orçamento, enviar fotos de referência e continuar a conversa depois, mesmo em outro aparelho. |
-| **Vendedor** | Saber na hora que chegou mensagem, ver o pedido completo (produto, opções, data, entrega) e responder rápido, inclusive pelo celular. |
+1. A Ana abre a vitrine da loja no celular, escolhe um bolo e toca em **Pedir orçamento**. Informa **nome, e-mail, quantidade, data da festa e observações** e envia.
+2. O pedido aparece no painel da loja. O Retoma salva o orçamento e abre **uma conversa vinculada a esse orçamento**. A equipe vê quais orçamentos ainda **aguardam resposta**.
+3. Uma vendedora responde pelo painel. Na **primeira resposta**, ela **assume o atendimento** e o orçamento passa de **Novo pedido** para **Em atendimento**. Depois, a equipe marca o orçamento como **Orçamento enviado**, **Confirmado** ou **Perdido**.
+4. A Ana fecha a página. Quando a loja responde, ela recebe um e-mail com o botão **Abrir conversa**. Ela abre o link **em outro aparelho** e continua a mesma conversa, **sem criar senha**.
 
-**Fora desta versão:** funil Kanban, propostas formais, pagamento online, cálculo de frete, notificação push nativa e qualquer integração com WhatsApp ou Instagram. Não use `wa.me`, Instagram Direct nem widgets de atendimento de terceiros.
+**Fora desta versão:** quadro Kanban, fila de retornos, proposta formal com pagamento, cálculo de frete, notificação push nativa, cadastro aberto de novas lojas e qualquer integração com WhatsApp ou Instagram. Não use `wa.me`, Instagram Direct nem widgets de atendimento de terceiros.
 
 ## 2. Tecnologia
 
 - **React, TypeScript e Tailwind CSS.**
 - **Lovable Cloud** (Supabase/PostgreSQL, Auth, Storage, Realtime e Edge Functions).
 - O banco é a fonte oficial dos dados. Armazenamento local só para preferências de interface e para lembrar a origem da visita.
-- **Uma única loja nesta versão**, mas **todas as tabelas de dados da loja têm `loja_id`**, e as políticas de acesso filtram por loja. Isso vai permitir várias lojas no futuro sem refazer o banco.
-- Envio de e-mails pelo **Resend**, chamado a partir de Edge Functions. A chave fica em segredo do backend, nunca no frontend.
-- Tarefas agendadas (alarme de mensagem sem resposta) com **pg_cron** ou um agendamento equivalente do Lovable Cloud.
+- **Várias lojas desde o início:** todas as tabelas de dados de negócio têm `loja_id`, e as políticas de acesso isolam cada loja.
+- E-mails pelo **Resend**, chamado em Edge Functions. Chaves só em segredos do backend.
+- Tarefas agendadas (alarme de orçamento sem resposta) com **pg_cron** ou equivalente do Lovable Cloud.
 
-## 3. Vitrine pública
+## 3. Lojas, equipe e acesso
+
+- Uma **loja** tem nome, slug, logo, cor principal, foto de capa, horário de atendimento e configurações.
+- **Membros** ligam usuários a lojas, com papel **dono** ou **vendedora**. Uma pessoa pode pertencer a mais de uma loja; nesse caso o painel mostra um seletor de loja.
+- O **dono** convida vendedoras por e-mail em **Configurações › Equipe**. A convidada cria a senha e entra vinculada à loja.
+- **Criação de lojas:** nesta versão, sem cadastro público. Uma rota **`/admin`**, acessível só a usuários marcados como **administradores da plataforma**, permite criar uma loja (nome e slug) e convidar o dono por e-mail.
+- **Row Level Security** em todas as tabelas, por loja e por vínculo de membro. O mesmo isolamento vale para Realtime e Storage. Teste com duas lojas.
+
+## 4. Vitrine pública
 
 **Rota:** `/loja/:slug`. Demonstração em `/loja/doceria-horizonte`.
 
 ### Catálogo
 
-- Identidade da loja (nome, logo, frase curta), busca visível e filtro por categoria. No celular, os produtos aparecem logo no início da tela.
-- Cartão do produto: **foto, nome, preço e ação principal**. Formatos de preço: "R$ 12,00 a unidade", "A partir de R$ 90,00 o kg", "R$ 85,00 o cento" ou **"Sob encomenda"**. Um produto sob encomenda nunca aparece por R$ 0,00.
-- Busca por nome ou descrição, combinável com a categoria. Sem resultados, oferecer **Limpar filtros**.
-- Página do produto: foto grande, descrição, preço, unidade, **quantidade mínima** (quando houver), **antecedência necessária** ("Encomende com 2 dias de antecedência") e os botões **Pedir orçamento** e **Tirar dúvidas no chat**.
+- Capa da loja com logo e frase curta, busca visível e categorias em abas roláveis. No celular, os produtos aparecem logo no início.
+- Grade de **2 colunas no celular** e **3 a 4 no desktop**. Cartão: **foto quadrada, nome e preço**. Formatos: "R$ 12,00 a unidade", "A partir de R$ 90,00 o kg", "R$ 150,00 o cento" ou **"Sob encomenda"**. Nunca R$ 0,00.
+- Busca por nome ou descrição, combinável com a categoria. Sem resultados, **Limpar filtros**.
+- Página do produto: foto grande, descrição, preço, unidade, **quantidade mínima** (quando houver), **antecedência necessária** ("Encomende com 3 dias de antecedência") e o botão **Pedir orçamento**.
 
 ### Pedir orçamento
 
-Formulário em uma etapa, curto e confortável no celular:
+Formulário curto, em uma tela, confortável no celular:
 
 1. **Quantidade**, respeitando a quantidade mínima.
-2. **Opções do produto**: cada grupo (ex.: "Massa", "Recheio", "Cobertura") é de escolha única ou múltipla, com mínimo e máximo de escolhas quando configurado. **As opções não alteram o preço exibido.**
-3. **Data desejada** (obrigatória). O calendário bloqueia datas anteriores à antecedência mínima do produto (ou da loja, se o produto não tiver uma própria) e os dias em que a loja não trabalha.
-4. **Entrega ou retirada**, mostrando só as modalidades que a loja oferece. Na entrega, pedir **bairro e endereço** e avisar: "O valor da entrega é combinado no chat".
-5. **Observação** curta e, opcionalmente, **foto de referência**.
-6. Antes de enviar, mostrar o resumo: produto, quantidade, opções, data e modalidade.
+2. **Opções do produto** (ex.: Massa, Recheio, Cobertura), de escolha única ou múltipla, quando o produto tiver. **Não alteram o preço.**
+3. **Data da festa** (obrigatória). O calendário bloqueia datas antes da antecedência mínima (do produto ou, se não houver, da loja) e dias em que a loja não trabalha.
+4. **Entrega ou retirada**, só com as modalidades que a loja oferece. Na entrega, pedir **bairro e endereço** e avisar: "O valor da entrega é combinado no chat".
+5. **Observações** e, opcionalmente, uma **foto de referência**.
+6. **Nome e e-mail** (obrigatórios) e **telefone** (opcional), com a frase "Usamos seu contato só para responder seu pedido." e link para a **Política de privacidade**. Sem senha.
+7. Resumo antes de enviar: produto, quantidade, opções, data e modalidade.
 
-Ao enviar, o pedido aparece no chat como uma **mensagem estruturada** (cartão com foto do produto e os dados acima), e a conversa continua normalmente.
+Ao enviar, abrir a tela da conversa desse orçamento, com o **cartão do pedido** no topo (foto do produto e os dados acima) e a mensagem "Recebemos seu pedido. A loja vai responder por aqui e avisar no seu e-mail."
 
-### Chat próprio
+### Conversa do orçamento
 
-- Botão flutuante **Conversar com a loja**. No desktop abre um painel no canto inferior direito; no celular, uma tela inteira com o campo de mensagem visível mesmo com o teclado aberto.
-- **Tirar dúvidas no chat** abre o chat com um cartão de contexto (foto, nome e preço do produto). Também é possível iniciar um atendimento geral, sem produto.
-- **Primeiro contato:** pedir **nome** e **e-mail** (obrigatórios) e **telefone** (opcional), com a frase: "Usamos seu contato só para responder seu pedido." e um link para a **Política de privacidade**. Sem senha.
-- A conversa e o lead só são criados quando o comprador **envia a primeira mensagem ou o pedido de orçamento**. Abrir o widget ou ver produtos não cria nada.
-- Mensagens em ordem cronológica, diferenciando comprador e loja, com horário e estados **enviando**, **enviada** e **falhou (tentar de novo)**. O texto digitado é preservado se o envio falhar.
-- **Fotos nas duas direções:** JPG, PNG ou WebP, até 5 MB, com pré-visualização e progresso de envio. Ao tocar, a foto abre ampliada.
-- **Fora do horário de atendimento**, o chat mostra uma faixa discreta, por exemplo "Respondemos a partir de amanhã, 8h", e continua aceitando mensagens.
-- Se o comprador perguntar sobre outro produto, o novo produto entra como contexto da mensagem na mesma conversa.
-- Fechar o widget só o recolhe. Ao reabrir ou atualizar a página no mesmo navegador, o histórico continua lá.
+- **Cada orçamento tem a sua conversa.** Não existe chat solto sem pedido nesta versão.
+- No celular, tela inteira com o campo de mensagem visível mesmo com o teclado aberto. No desktop, painel lateral.
+- Mensagens em ordem cronológica, diferenciando cliente e loja, com horário e estados **enviando**, **enviada** e **falhou (tentar de novo)**. O texto digitado é preservado se o envio falhar.
+- **Fotos nas duas direções:** JPG, PNG ou WebP, até 5 MB, com pré-visualização e progresso. Ao tocar, a foto amplia.
+- Mostrar a **etapa atual** do orçamento em linguagem da cliente: "Aguardando a loja", "Em atendimento", "Orçamento enviado", "Pedido confirmado", "Encerrado".
+- **Fora do horário de atendimento**, uma faixa discreta: "Respondemos a partir de amanhã, 9h". As mensagens continuam sendo aceitas.
+- Um botão **Meus pedidos** lista os orçamentos da cliente naquela loja, para ela voltar a qualquer um.
 
 ### Voltar para a conversa (requisito central)
 
-- Quando a loja responde e o comprador **não está com o chat aberto**, ele recebe um e-mail "A Doceria Horizonte respondeu seu pedido", com um trecho da resposta e o botão **Abrir conversa**.
-- O botão é um **link mágico**: ao clicar, em qualquer aparelho ou navegador, o comprador entra autenticado e vê suas conversas com a loja.
-- **No máximo um e-mail a cada 30 minutos por conversa.** Mensagens seguidas da loja dentro desse intervalo não geram novos e-mails.
-- Na vitrine, um link discreto **"Já fiz um pedido"** permite informar o e-mail e receber um novo link mágico (com limite de tentativas).
-- **Segurança:** digitar um e-mail ou telefone **nunca** libera o histórico de ninguém. Só quem clica no link recebido naquele e-mail acessa as conversas associadas a ele. Use sessão anônima do Supabase Auth para o visitante e gere o link mágico no backend (por exemplo, `auth.admin.generateLink`), enviando-o pelo Resend.
+- Quando a loja responde e a cliente **não está com a conversa aberta**, ela recebe um e-mail "A Doceria Horizonte respondeu seu pedido", com um trecho da resposta e o botão **Abrir conversa**.
+- O botão é um **link mágico**: em qualquer aparelho ou navegador, a cliente entra autenticada e cai direto na conversa daquele orçamento.
+- **No máximo um e-mail a cada 30 minutos por orçamento.**
+- Na vitrine, o link **"Já fiz um pedido"** pede o e-mail e envia um novo link mágico (com limite de tentativas).
+- **Segurança:** digitar um e-mail ou telefone **nunca** libera o histórico. Só quem clica no link enviado àquele e-mail acessa os orçamentos dele. Use sessão anônima do Supabase Auth para a visitante e gere o link mágico no backend (por exemplo, `auth.admin.generateLink`), enviando-o pelo Resend.
 
 ### Origem da visita
 
 - A vitrine aceita `?origem=instagram`, `?origem=whatsapp` ou `?origem=outro`. Guarde a origem da primeira visita no navegador.
-- Registre **visitas anônimas por dia e por origem** (sem dados pessoais nem cookies de terceiros). O contato e o lead guardam a origem de onde vieram.
+- Registre **visitas anônimas por dia e por origem**, sem dados pessoais nem cookies de terceiros. O orçamento guarda a origem.
 
-## 4. Painel do vendedor
+## 5. Painel da loja
 
-**Rota:** `/painel`, protegida por login (Supabase Auth com e-mail e senha). Navegação: **Atendimento**, **Produtos** e **Configurações**. Abre em **Atendimento**.
+**Rota:** `/painel`, com login por e-mail e senha. Navegação: **Orçamentos**, **Produtos** e **Configurações**. Abre em **Orçamentos**.
 
-### Atendimento em tempo real
+### Orçamentos (tela principal: caixa de conversas)
 
 No desktop, três colunas. No celular, sequência de telas com botão de voltar.
 
-1. **Lista de conversas:** nome, trecho da última mensagem, horário, responsável e indicador de não lida, ordenada pela atividade mais recente. Busca por nome e filtros **Todas** e **Não lidas**.
-2. **Conversa:** histórico completo com os cartões de pedido, fotos e campo de resposta com envio de foto. A resposta aparece no chat do comprador em tempo real. Cada mensagem da loja mostra quem da equipe respondeu.
-3. **Ficha do contato:** nome, e-mail, telefone, origem, data do primeiro contato, responsável, **último pedido** (produto, quantidade, opções, data desejada, entrega ou retirada e endereço) e **observações internas**, visíveis só para a equipe. Botão **Excluir dados do contato** com confirmação: apaga dados pessoais, mensagens e fotos daquele contato.
+1. **Lista de orçamentos**, cada item com: nome da cliente, produto, data da festa, etapa, responsável, trecho da última mensagem, horário e indicador de não lida. Ordenada pela atividade mais recente.
+   - Filtros: **Aguardando resposta** (última mensagem é da cliente), **Novo pedido**, **Em atendimento**, **Orçamento enviado**, **Confirmado**, **Perdido**, **Todos**. Abre em **Aguardando resposta**, com o número de itens em cada filtro.
+   - Busca por nome da cliente ou produto.
+2. **Conversa** com o cartão do pedido no topo, histórico, fotos e campo de resposta com envio de foto. A resposta chega à cliente em tempo real. Cada mensagem da loja mostra quem respondeu.
+3. **Ficha do orçamento**: cliente (nome, e-mail, telefone, origem), produto, quantidade, opções, data da festa, entrega ou retirada com endereço, observações, foto de referência, **etapa**, **responsável**, **valor combinado** (opcional, preenchido pela equipe) e **observações internas** (só a equipe vê). Também mostra os **outros orçamentos** da mesma cliente.
 
-**Responsável automático:** o primeiro vendedor que responde a uma conversa vira o responsável por ela.
+**Etapas e responsável:**
 
-**Avisos para o vendedor:**
+| Etapa | Quando |
+|---|---|
+| **Novo pedido** | A cliente enviou o pedido. |
+| **Em atendimento** | Automática na primeira resposta da equipe. Quem respondeu vira a responsável. |
+| **Orçamento enviado** | A equipe marca ao passar o valor. |
+| **Confirmado** | A equipe marca quando o pedido fecha. |
+| **Perdido** | A equipe marca, com motivo: Sem agenda na data, Preço, Sem resposta da cliente, Desistiu, Outro. |
 
-- Com o painel aberto: **som** e **contador de não lidas no título da aba** quando chega mensagem nova.
-- **Alarme por e-mail:** se uma mensagem do comprador ficar sem resposta por **X minutos** (padrão **5**, configurável), enviar um e-mail para o endereço de avisos da loja com o nome do comprador, o trecho da mensagem e o link da conversa. Um único alarme por mensagem pendente.
-- O prazo do alarme **só conta dentro do horário de atendimento**. Mensagens recebidas fora do horário geram um alarme quando a loja abre.
+- Ações na ficha: **Mudar etapa** (seletor, funciona no celular e no teclado) e **Trocar responsável**.
+- Registrar cada mudança de etapa e de responsável com data, hora, valor anterior, novo valor e autor. Mostrar esse histórico na ficha.
+- Se uma atualização falhar, voltar ao valor anterior na tela e explicar.
+
+**Avisos para a equipe:**
+
+- Com o painel aberto: **som** e **contador de não lidas no título da aba**.
+- **Alarme por e-mail:** se a mensagem de uma cliente ficar sem resposta por **X minutos** (padrão **5**, configurável), enviar um e-mail para o endereço de avisos da loja com nome, produto, trecho e link do orçamento. Um alarme por mensagem pendente.
+- O prazo só conta **dentro do horário de atendimento**. Mensagens fora do horário geram o alarme na abertura.
+- Botão **Excluir dados da cliente**, com confirmação: apaga dados pessoais, mensagens e fotos dela naquela loja.
 
 ### Produtos
 
-- Cadastrar, editar, publicar e despublicar produtos.
-- Campos: **nome, categoria, descrição, foto, tipo de preço** (unitário, a partir de, por cento, por kg, sob encomenda), **valor** (quando aplicável), **unidade de venda**, **quantidade mínima** (opcional), **antecedência mínima em dias** (opcional; sem valor, vale o padrão da loja) e **grupos de opções**.
-- Grupos de opções: nome do grupo, lista de opções, escolha única ou múltipla e mínimo/máximo de escolhas. Reordenáveis.
-- Fotos no Storage, com validação de formato e progresso de upload.
-- Gerenciar categorias (criar, renomear, reordenar).
-- **Copiar link da vitrine** com seletor de origem (Instagram, WhatsApp, Outro), gerando a URL com `?origem=`. Botão **Abrir minha vitrine**.
+- Cadastrar, editar, publicar e despublicar.
+- Campos: **nome, categoria, descrição, foto, tipo de preço** (unitário, a partir de, por cento, por kg, sob encomenda), **valor**, **unidade**, **quantidade mínima** (opcional), **antecedência em dias** (opcional; sem valor, vale o padrão da loja) e **grupos de opções** (nome, opções, escolha única ou múltipla, mínimo e máximo).
+- Fotos no Storage, com validação e progresso.
+- Categorias: criar, renomear, reordenar.
+- **Copiar link da vitrine** com seletor de origem (Instagram, WhatsApp, Outro) e **Abrir minha vitrine**.
 
-### Configurações da loja
+### Configurações
 
 - Nome, frase de apresentação e slug.
-- **Identidade visual da vitrine:** logo, **cor principal** (seletor de cor com prévia ao vivo e aviso se o contraste ficar ruim) e **foto de capa**.
-- **Horário de atendimento** por dia da semana (aberto/fechado, início e fim).
-- **Antecedência mínima padrão** em dias.
+- **Identidade visual da vitrine:** logo, **cor principal** (com prévia ao vivo e aviso de contraste ruim) e **foto de capa**.
+- **Horário de atendimento** por dia da semana.
+- **Antecedência padrão** em dias.
 - **Modalidades:** entrega, retirada ou ambas.
-- **Prazo do alarme de "sem resposta"** em minutos (padrão 5).
-- **E-mail de avisos** da loja.
-- **Equipe:** o dono convida vendedores por e-mail. O convidado cria a senha e entra já vinculado à loja.
+- **Prazo do alarme** em minutos (padrão 5) e **e-mail de avisos**.
+- **Equipe:** convidar, listar e remover vendedoras (só o dono).
 
-### PWA
+O painel pode ser **instalado na tela inicial** do celular (PWA com manifest e ícone).
 
-O painel pode ser **instalado na tela inicial** do celular (manifest, ícone e abertura em tela cheia).
+## 6. Regras de backend
 
-## 5. Regras de backend
+Em banco ou Edge Functions, para funcionar com várias abas e vendedoras ao mesmo tempo:
 
-Implemente no banco ou em Edge Functions, para funcionar com várias abas e vendedores ao mesmo tempo:
+1. **Envio do pedido:** em uma transação, criar ou reaproveitar o **contato** (por sessão da visitante e loja), criar o **orçamento** em **Novo pedido** com origem e uma **cópia** do nome do produto, preço exibido e opções escolhidas, criar a **conversa** vinculada e salvar o cartão do pedido como primeira mensagem. A equipe vê o orçamento sem recarregar.
+2. **Primeira resposta:** define a responsável e muda **Novo pedido → Em atendimento**, uma única vez, mesmo com duas vendedoras respondendo ao mesmo tempo.
+3. **Mudanças de etapa** só pela equipe da loja, sempre registradas no histórico.
+4. **Envio sem duplicar:** cada envio leva um identificador gerado no cliente. Clique duplo ou nova tentativa não duplicam pedido, conversa ou mensagem.
+5. **Reconexão:** mostrar quando a conexão cai; ao voltar, buscar as mensagens do intervalo e retomar o tempo real.
+6. **Validação:** loja, produto publicado, quantidade mínima, data mínima, dias de funcionamento, opções, tamanho das mensagens, tipo e tamanho das fotos. Limitar envios repetitivos.
+7. **Métricas:** registrar `visita` (com origem), `pedido_enviado`, `email_resposta_enviado` e `retorno_pelo_email` (quando a cliente abre o link mágico).
 
-1. **Primeiro envio:** em uma transação, criar ou reaproveitar o contato da sessão, criar a conversa e o **lead** (com etapa `novo_lead`, origem e produto quando houver) e salvar a primeira mensagem ou o pedido. O vendedor vê a conversa sem recarregar a página.
-2. **Mesma conversa:** novas mensagens e novos pedidos do mesmo comprador entram na conversa ativa.
-3. **Primeira resposta:** a primeira resposta de um vendedor define o responsável e muda a etapa do lead para `primeiro_contato`. (O funil visual chega na próxima fase; o campo já deve existir.)
-4. **Envio sem duplicar:** cada envio leva um identificador gerado no cliente. Clique duplo, reconexão ou nova tentativa não pode duplicar mensagem, conversa ou lead.
-5. **Reconexão:** mostrar na interface quando a conexão cai. Ao voltar, buscar as mensagens do intervalo e retomar o tempo real.
-6. **Validação:** conferir no backend a loja, o produto, a data mínima, as opções escolhidas, o tamanho das mensagens e o tipo e tamanho das fotos. Limitar envios repetitivos.
-7. **Métricas:** registrar os eventos `visita` (com origem), `primeira_mensagem`, `email_resposta_enviado` e `retorno_pelo_email` (quando o comprador abre o link mágico), para medir o piloto.
+## 7. Dados e privacidade
 
-## 6. Dados e acesso
+Entidades: **lojas, membros, administradores da plataforma, categorias, produtos, grupos de opções, opções, contatos, orçamentos, conversas, mensagens, anexos, histórico de etapas, eventos de métrica**. Todas as de negócio com `loja_id`.
 
-Entidades: **lojas, membros da equipe, categorias, produtos, grupos de opções, opções, contatos, leads, conversas, mensagens, anexos, pedidos de orçamento, eventos de métrica**. Todas com `loja_id`.
-
-- Um pedido de orçamento guarda uma **cópia** do nome do produto, do preço exibido e das opções escolhidas no momento do envio, para o histórico não mudar se o produto for editado.
-- **Row Level Security** em todas as tabelas, por loja, por membro da equipe e por dono da sessão do comprador. O mesmo isolamento vale para o Realtime e para o Storage.
 - **Leitura pública:** só dados públicos da loja, categorias e produtos publicados.
-- O comprador acessa **apenas as próprias conversas, mensagens e fotos**. Nunca vê observações internas, outros contatos ou dados da equipe.
-- O comprador não pode se passar por vendedor, mudar etapa ou responsável, nem enviar mensagem em nome da loja.
-- Fotos do chat em bucket **privado**, servidas por URL assinada e temporária.
-- Chaves secretas (Resend, service role) só no backend.
+- A cliente acessa **apenas os próprios orçamentos, mensagens e fotos**. Nunca vê observações internas, valor combinado interno, histórico de etapas, outros contatos ou dados da equipe.
+- A cliente não pode mudar etapa ou responsável nem enviar mensagem em nome da loja.
+- Fotos em bucket **privado**, servidas por URL assinada temporária.
+- Página **/privacidade** simples: dados coletados, finalidade, armazenamento e como pedir a exclusão.
 
-## 7. Design
+## 8. Design
 
-Duas experiências com identidades diferentes: **a vitrine tem a cara da loja e dá vontade de encomendar; o painel tem a cara do Retoma e ajuda a responder rápido.**
+**A vitrine tem a cara da loja e dá vontade de encomendar. O painel tem a cara do Retoma e ajuda a responder rápido.**
 
-### Vitrine: identidade da loja
+### Vitrine
 
-- A vitrine usa a **logo, a cor principal e a foto de capa** configuradas pela loja. A cor principal aparece em botões, links, abas ativas e no botão do chat.
-- O restante é fixo, para a vitrine nunca ficar feia com qualquer cor escolhida: superfícies **creme (#FBF6F0)**, texto **cacau (#3B2A25)**, espaçamentos e cantos arredondados. Gere automaticamente as variações da cor principal (hover, fundo suave) e escolha texto claro ou escuro sobre ela pelo contraste.
-- **Sempre clara**, sem modo escuro (fotos de comida ficam piores no escuro).
-- **Tipografia:** **Fraunces** nos títulos (nome da loja, títulos de seção e nome do produto na página do produto) e **Inter** em todo o resto, inclusive preços, datas e formulários. Sem fontes manuscritas ou cursivas.
-- **Catálogo:** grade de **2 colunas no celular** e **3 a 4 no desktop**, com foto quadrada, nome e preço. Categorias em **abas roláveis** no topo, fixas ao rolar. Foto de capa da loja com logo e frase curta acima da grade, sem empurrar os produtos para muito longe.
-- Fotos grandes, preços legíveis e o botão de pedido em destaque.
+- Usa **logo, cor principal e foto de capa** da loja. A cor principal aparece em botões, links, abas ativas e destaques.
+- Fixos: superfícies **creme (#FBF6F0)**, texto **cacau (#3B2A25)**, espaçamentos e cantos arredondados. Gerar variações da cor principal e escolher texto claro ou escuro sobre ela pelo contraste.
+- **Sempre clara.**
+- **Fraunces** nos títulos (nome da loja, seções, nome do produto) e **Inter** no resto, inclusive preços, datas e formulários.
 - Rodapé discreto: **"Atendimento por Retoma"**.
 
-### Painel: identidade do Retoma
+### Painel
 
-- Visual **neutro e calmo**: fundo **off-white (#F7F7F5)**, superfícies brancas, bordas e textos secundários em **cinza quente**, texto principal **grafite (#1F2421)** e destaque em **verde-oliva (#5B6B3A)** para ações principais, item ativo do menu e indicadores de não lida.
-- **Modo escuro** no painel, seguindo o tema do sistema, com alternância manual em Configurações.
-- **Tipografia:** só **Inter**.
-- Navegação lateral no desktop e inferior no celular, composição compacta, com destaque para não lidas e para a conversa aberta.
+- Fundo **off-white (#F7F7F5)**, superfícies brancas, **cinza quente** nos secundários, texto **grafite (#1F2421)** e destaque **verde-oliva (#5B6B3A)** para ações principais, item ativo e não lidas.
+- **Modo escuro** seguindo o sistema, com alternância manual.
+- Só **Inter**.
+- Menu lateral no desktop e inferior no celular. Composição compacta.
 
 ### Regras gerais
 
-- Cores de apoio só para estados (sucesso, erro, atenção), iguais nas duas experiências.
-- Português do Brasil em toda a interface: moeda **R$ 180,00**, quantidades **1.000 unidades**, datas **sáb., 14/12**.
-- Rótulos curtos, sem slogans genéricos nem métricas decorativas. Explicações só onde há decisão real (para que serve o contato, a diferença entre "a partir de" e preço fechado).
-- Contraste adequado, foco visível, rótulos em todos os campos, navegação por teclado e alvos de toque confortáveis.
-- Estados vazios, carregamento, erro e sucesso. Nunca mostrar sucesso antes de a operação ser salva.
-- Página **/privacidade** com uma política de privacidade simples: dados coletados, finalidade (responder pedidos), armazenamento e como pedir a exclusão.
+- Cores de apoio só para estados (sucesso, erro, atenção). Etapas com rótulo em texto, nunca só por cor.
+- Português do Brasil: **R$ 180,00**, **1.000 unidades**, **sáb., 14/12**.
+- Rótulos curtos, sem slogans nem métricas decorativas.
+- Contraste adequado, foco visível, rótulos nos campos, navegação por teclado, alvos de toque confortáveis.
+- Estados vazios, carregamento, erro e sucesso. Nunca mostrar sucesso antes de salvar.
 
-## 8. Dados de demonstração
+## 9. Dados de demonstração
 
-Loja **Doceria Horizonte** (slug `doceria-horizonte`), com cor principal **terracota suave (#C8664B)**, logo simples e foto de capa de uma mesa de doces, horário de terça a sábado, das 9h às 18h, antecedência padrão de 2 dias e entrega e retirada habilitadas.
+- **Administrador da plataforma** de demonstração.
+- Loja **Doceria Horizonte** (`doceria-horizonte`): cor **terracota suave (#C8664B)**, logo simples, capa com mesa de doces, terça a sábado das 9h às 18h, antecedência padrão de 2 dias, entrega e retirada. **Uma dona e uma vendedora** de demonstração.
+- Produtos com fotos coerentes:
+  - **Bolos:** Bolo de aniversário (a partir de R$ 90,00 o kg, mínimo 1 kg, antecedência de 3 dias, grupos Massa, Recheio e Cobertura), Bolo de pote (R$ 12,00 a unidade).
+  - **Docinhos:** Brigadeiro gourmet (R$ 150,00 o cento, mínimo 25, grupo Sabores de múltipla escolha), Bem-casado (R$ 4,50 a unidade, mínimo 50).
+  - **Kits festa:** Kit festa para 20 pessoas (a partir de R$ 220,00), Mesa de doces personalizada (sob encomenda).
+- Alguns orçamentos fictícios em etapas diferentes, marcados discretamente como exemplo.
+- Uma **segunda loja** mínima (ex.: **Ateliê Aurora**, com 2 produtos) para testar o isolamento.
 
-Categorias e produtos, com fotos coerentes:
+## 10. Critérios de aceite
 
-- **Bolos:** Bolo de aniversário (a partir de R$ 90,00 o kg, mínimo 1 kg, antecedência de 3 dias, grupos Massa, Recheio e Cobertura), Bolo de pote (R$ 12,00 a unidade).
-- **Docinhos:** Brigadeiro gourmet (R$ 150,00 o cento, mínimo 25 unidades, grupo Sabores de múltipla escolha), Bem-casado (R$ 4,50 a unidade, mínimo 50).
-- **Kits festa:** Kit festa para 20 pessoas (a partir de R$ 220,00), Mesa de doces personalizada (sob encomenda).
+Percorra a aplicação de verdade e corrija o que falhar:
 
-Crie algumas conversas fictícias, marcadas discretamente como exemplo, e um vendedor de demonstração.
+- **Cenário da Ana:**
+  1. Ana abre `/loja/doceria-horizonte?origem=instagram`, escolhe **Bolo de aniversário** e pede 2 kg, massa branca, recheio de ninho com morango, cobertura de chantilly, **retirada no próximo sábado**, observação "É para o aniversário da minha filha", foto de referência, nome e e-mail.
+  2. O orçamento aparece no painel em **Novo pedido** e em **Aguardando resposta**, com som e contador na aba.
+  3. Ana fecha a página. A vendedora responde "Que lindo! Conseguimos sim. Fica R$ 180,00, pode ser?". O orçamento vai para **Em atendimento** e ela vira a responsável.
+  4. Ana recebe **um** e-mail, abre **Abrir conversa** em outro navegador, vê a resposta e escreve "Pode sim!".
+  5. A vendedora marca **Orçamento enviado** e depois **Confirmado**. O histórico mostra as duas mudanças.
+- Um pedido cria **um contato, um orçamento, uma conversa** e o cartão do pedido, com loja, produto, opções, data e origem corretos.
+- Calendário e backend recusam data antes da antecedência e em dia fechado.
+- Clique duplo e nova tentativa não duplicam nada.
+- Várias respostas em 30 minutos geram só um e-mail.
+- Duas vendedoras respondendo ao mesmo tempo: só uma vira responsável, e a etapa muda uma vez.
+- Alarme de "sem resposta" respeita o prazo e o horário.
+- Duas visitantes: cada uma vê só os próprios orçamentos. Digitar o e-mail de outra pessoa não dá acesso.
+- Duas lojas: a equipe de uma não vê nada da outra, nem pelo Realtime nem pelo Storage.
+- **Excluir dados da cliente** remove dados pessoais, mensagens e fotos.
+- O painel instala como app no celular.
 
-**Cenário principal**, reproduzível com um visitante novo:
-
-1. Ana abre `/loja/doceria-horizonte?origem=instagram` e entra em **Bolo de aniversário**.
-2. Toca em **Pedir orçamento**: 2 kg, massa branca, recheio de ninho com morango, cobertura de chantilly, **retirada no próximo sábado**, observação "É para o aniversário da minha filha" e uma **foto de referência**.
-3. Informa nome e e-mail e envia. O vendedor vê a conversa chegar com o cartão do pedido, o som toca e o contador da aba sobe.
-4. Ana fecha a página. O vendedor responde "Que lindo! Conseguimos sim. Fica R$ 180,00, pode ser?". Ana recebe o e-mail, toca em **Abrir conversa** em outro navegador e vê a resposta.
-5. Se ninguém responder em 5 minutos (dentro do horário), o e-mail de alarme chega para a loja.
-
-## 9. Critérios de aceite
-
-Antes de concluir, percorra a aplicação de verdade e corrija o que falhar:
-
-- Vitrine em janela anônima ou celular e painel autenticado em outra janela. Mensagens e fotos chegam nas duas pontas em tempo real.
-- Abrir e fechar o widget sem enviar nada **não cria** contato, conversa nem lead.
-- Um pedido de orçamento cria **um contato, uma conversa, um lead e um pedido**, com loja, produto, opções, data e origem corretos.
-- O calendário não aceita datas antes da antecedência nem em dias fechados, e o backend recusa essas datas mesmo se o frontend for burlado.
-- Clique duplo e nova tentativa de envio não duplicam nada.
-- Com o chat do comprador fechado, a resposta do vendedor gera **um** e-mail; várias respostas em 30 minutos não geram mais e-mails. O link mágico abre a conversa em outro navegador.
-- O alarme de "sem resposta" respeita o prazo configurado e o horário de atendimento.
-- Dois compradores independentes: cada um vê só a própria conversa. Digitar o e-mail de outra pessoa não dá acesso ao histórico dela.
-- Atualizar as duas janelas mantém conversa, pedido, responsável e fotos.
-- **Excluir dados do contato** remove os dados pessoais, as mensagens e as fotos.
-- O painel instala como app no celular e é utilizável com uma mão.
-
-**Entrega:** informe como abrir a vitrine e o painel, como acessar o vendedor de demonstração, como testar o cenário da Ana e quais etapas dependem de configuração manual no Lovable Cloud (chave do Resend, domínio de envio de e-mail, agendamento do alarme).
+**Entrega:** diga como abrir a vitrine, o painel e o `/admin`, quais são os logins de demonstração, como rodar o cenário da Ana e o que depende de configuração manual no Lovable Cloud (chave do Resend, domínio de envio, agendamento do alarme).
