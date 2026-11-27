@@ -1,221 +1,218 @@
-# Prompt da fase 1 para o Lovable
+# Prompt do piloto para o Lovable
 
 Copie tudo abaixo da linha e cole no modo de criação do Lovable.
 
 ---
 
-Crie o **Retoma**, um CRM de vendas para pequenos negócios, em português do Brasil. Cada negócio tem sua **vitrine pública**, sua **equipe** e seus **dados**, isolados dos outros. O Retoma ajuda a loja a **receber pedidos de orçamento, conversar com os compradores e acompanhar cada orçamento até o fechamento**.
+Crie o **Retoma**, um CRM simples para pequenos negócios, em português do Brasil. Ele organiza **clientes, atendimentos e compromissos em cartões**, para que o dono e a equipe saibam **o que precisam fazer hoje** e **o que está atrasado**. Serve a negócios diferentes: salões, assistências técnicas, oficinas, gráficas, lojas e prestadores de serviço.
 
-O piloto é com uma confeitaria. Implemente o fluxo completo, com telas funcionais, banco de dados, autenticação e permissões. Quero testar como compradora em uma janela anônima e como vendedora em outra.
+Cada negócio tem seu próprio espaço, sua equipe e acesso **apenas aos seus dados**. Implemente telas funcionais, banco de dados, autenticação e permissões.
 
-## 1. O fluxo que precisa funcionar
+**Custo zero de operação além da hospedagem:** sem API da Meta, sem Resend ou outro serviço de e-mail, sem ferramenta paga de notificações. Os lembretes aparecem dentro do Retoma. O WhatsApp é aberto por link (`https://wa.me/...`).
 
-1. A Ana abre a vitrine da loja no celular, escolhe um bolo e toca em **Pedir orçamento**. Informa **nome, e-mail, quantidade, data da festa e observações** e envia.
-2. O pedido aparece no painel da loja. O Retoma salva o orçamento e abre **uma conversa vinculada a esse orçamento**. A equipe vê quais orçamentos ainda **aguardam resposta**.
-3. Uma vendedora responde pelo painel. Na **primeira resposta**, ela **assume o atendimento** e o orçamento passa de **Novo pedido** para **Em atendimento**. Depois, a equipe marca o orçamento como **Orçamento enviado**, **Confirmado** ou **Perdido**.
-4. A Ana fecha a página. Quando a loja responde, ela recebe um e-mail com o botão **Abrir conversa**. Ela abre o link **em outro aparelho** e continua a mesma conversa, **sem criar senha**.
+## 1. Conceitos
 
-**Fora desta versão:** quadro Kanban, fila de retornos, proposta formal com pagamento, cálculo de frete, notificação push nativa, cadastro aberto de novas lojas e qualquer integração com WhatsApp ou Instagram. Não use `wa.me`, Instagram Direct nem widgets de atendimento de terceiros.
+| Conceito | O que é |
+|---|---|
+| **Negócio** | O espaço de uma empresa: equipe, clientes, cartões, etapas e mensagens prontas. |
+| **Cliente** | Pessoa atendida: nome, telefone (WhatsApp), e-mail opcional e observações. Pode ter vários cartões. |
+| **Cartão** | Um atendimento: título, cliente, responsável, etapa, observações e valor opcional. Ex.: "Troca de tela – iPhone 12", "Escova + hidratação". |
+| **Próximo passo** | Uma tarefa com data e hora ligada a um cartão. Ex.: "Retornar sobre o orçamento" na sexta às 10h. |
+| **Agendamento** | Um horário marcado com o cliente, com início e duração. Ex.: serviço na sexta às 14h, 1h30. Pode ter um **lembrete de confirmação** separado (ex.: quinta às 10h). |
+
+**Regra de ouro:** todo cartão aberto deve ter um próximo passo ou um agendamento futuro. Cartão aberto sem nada marcado aparece em destaque como **"Sem próximo passo"**. É assim que nenhum cliente fica esquecido.
 
 ## 2. Tecnologia
 
 - **React, TypeScript e Tailwind CSS.**
-- **Lovable Cloud** (Supabase/PostgreSQL, Auth, Storage, Realtime e Edge Functions).
-- O banco é a fonte oficial dos dados. Armazenamento local só para preferências de interface e para lembrar a origem da visita.
-- **Várias lojas desde o início:** todas as tabelas de dados de negócio têm `loja_id`, e as políticas de acesso isolam cada loja.
-- E-mails pelo **Resend**, chamado em Edge Functions. Chaves só em segredos do backend.
-- Tarefas agendadas (alarme de orçamento sem resposta) com **pg_cron** ou equivalente do Lovable Cloud.
+- **Lovable Cloud** (Supabase/PostgreSQL, Auth e Realtime). Sem Edge Functions pagas nem serviços externos.
+- Todas as tabelas de negócio têm `negocio_id`. **Row Level Security** isola cada negócio em consultas, gravações e Realtime.
+- Cada negócio tem **fuso horário** (padrão `America/Sao_Paulo`). "Hoje", "atrasado" e a agenda usam esse fuso.
+- Atualização em tempo real: se uma pessoa da equipe conclui ou remarca algo, a tela dos outros atualiza sem recarregar.
+- Painel instalável como app no celular (**PWA** com manifest e ícone).
 
-## 3. Lojas, equipe e acesso
+## 3. Acesso e equipe
 
-- Uma **loja** tem nome, slug, logo, cor principal, foto de capa, horário de atendimento e configurações.
-- **Membros** ligam usuários a lojas, com papel **dono** ou **vendedora**. Uma pessoa pode pertencer a mais de uma loja; nesse caso o painel mostra um seletor de loja.
-- O **dono** convida vendedoras por e-mail em **Configurações › Equipe**. A convidada cria a senha e entra vinculada à loja.
-- **Criação de lojas:** nesta versão, sem cadastro público. Uma rota **`/admin`**, acessível só a usuários marcados como **administradores da plataforma**, permite criar uma loja (nome e slug) e convidar o dono por e-mail.
-- **Row Level Security** em todas as tabelas, por loja e por vínculo de membro. O mesmo isolamento vale para Realtime e Storage. Teste com duas lojas.
+- Login por e-mail e senha (Supabase Auth).
+- Papéis: **dono** e **equipe**. A equipe vê e edita todos os cartões do negócio. Só o dono gerencia etapas, mensagens prontas, equipe e dados do negócio.
+- O dono convida pessoas por e-mail usando o convite nativo do Supabase Auth. Também pode gerar um **link de convite** para copiar e mandar pelo WhatsApp (sem depender de e-mail).
+- Uma pessoa pode estar em mais de um negócio; nesse caso há um seletor de negócio.
+- **Criação de negócios:** sem cadastro público no piloto. Uma rota **`/admin`**, só para administradores da plataforma, cria o negócio (nome, segmento, fuso) e gera o link de convite do dono.
+- Ao criar o negócio, o **segmento** (Salão, Assistência técnica, Oficina, Gráfica, Loja, Serviços) pré-configura etapas sugeridas e mensagens prontas. Tudo pode ser editado depois.
 
-## 4. Vitrine pública
+## 4. Telas
 
-**Rota:** `/loja/:slug`. Demonstração em `/loja/doceria-horizonte`.
+Navegação: **Hoje**, **Quadro**, **Agenda**, **Clientes** e **Configurações**. Menu inferior no celular, lateral no desktop. O app abre em **Hoje**.
 
-### Catálogo
+Botão **+ Novo** sempre visível (no celular, botão flutuante), com as opções **Atendimento** e **Agendamento**.
 
-- Capa da loja com logo e frase curta, busca visível e categorias em abas roláveis. No celular, os produtos aparecem logo no início.
-- Grade de **2 colunas no celular** e **3 a 4 no desktop**. Cartão: **foto quadrada, nome e preço**. Formatos: "R$ 12,00 a unidade", "A partir de R$ 90,00 o kg", "R$ 150,00 o cento" ou **"Sob encomenda"**. Nunca R$ 0,00.
-- Busca por nome ou descrição, combinável com a categoria. Sem resultados, **Limpar filtros**.
-- Página do produto: foto grande, descrição, preço, unidade, **quantidade mínima** (quando houver), **antecedência necessária** ("Encomende com 3 dias de antecedência") e o botão **Pedir orçamento**.
+### 4.1 Hoje (tela principal)
 
-### Pedir orçamento
+Lista de compromissos de próximos passos, lembretes de confirmação e agendamentos, em seções:
 
-Formulário curto, em uma tela, confortável no celular:
+1. **Atrasados**: pendentes com data/hora já passada, do mais antigo para o mais recente, com "há 2 dias" ou "há 3h".
+2. **Hoje**: em ordem de horário. Itens sem hora ficam no topo como "Hoje, qualquer horário".
+3. **Agendamentos de hoje que já passaram e ainda não foram marcados**: "Como foi?" com **Realizado**, **Faltou** e **Remarcar**.
+4. **Próximos 7 dias**: agrupados por dia, recolhidos por padrão no celular.
+5. **Sem próximo passo**: cartões abertos sem nada marcado.
 
-1. **Quantidade**, respeitando a quantidade mínima.
-2. **Opções do produto** (ex.: Massa, Recheio, Cobertura), de escolha única ou múltipla, quando o produto tiver. **Não alteram o preço.**
-3. **Data da festa** (obrigatória). O calendário bloqueia datas antes da antecedência mínima (do produto ou, se não houver, da loja) e dias em que a loja não trabalha.
-4. **Entrega ou retirada**, só com as modalidades que a loja oferece. Na entrega, pedir **bairro e endereço** e avisar: "O valor da entrega é combinado no chat".
-5. **Observações** e, opcionalmente, uma **foto de referência**.
-6. **Nome e e-mail** (obrigatórios) e **telefone** (opcional), com a frase "Usamos seu contato só para responder seu pedido." e link para a **Política de privacidade**. Sem senha.
-7. Resumo antes de enviar: produto, quantidade, opções, data e modalidade.
+Cada item mostra: tipo (ícone e rótulo: Retorno, Confirmação, Agendamento), título da ação, cliente, título do cartão, hora, responsável e etapa.
 
-Ao enviar, abrir a tela da conversa desse orçamento, com o **cartão do pedido** no topo (foto do produto e os dados acima) e a mensagem "Recebemos seu pedido. A loja vai responder por aqui e avisar no seu e-mail."
+**Ações direto no item, sem abrir o cartão:**
 
-### Conversa do orçamento
+- **WhatsApp**: abre o WhatsApp do cliente com a mensagem pronta do tipo da ação (ver 4.7).
+- **Concluir**: abre uma folha curta com:
+  - **O que aconteceu?** Atalhos por tipo (Confirmação: *Confirmado*, *Pediu para remarcar*, *Cancelou*, *Sem resposta*; Retorno: *Aprovou*, *Vai pensar*, *Recusou*, *Sem resposta*) e campo de texto opcional.
+  - **Próximo passo**: atalhos *Amanhã*, *Em 2 dias*, *Próxima semana*, *Escolher data e hora* e *Nenhum*. O título vem sugerido conforme o resultado (ex.: *Sem resposta* sugere "Tentar de novo" em 2 horas).
+  - **Mudar etapa** (opcional), com a etapa sugerida pelo resultado (ex.: *Aprovou* sugere "Em andamento").
+  - Um único botão **Salvar**. Concluir, registrar o resultado, agendar o próximo passo e mudar a etapa acontecem juntos, numa operação só.
+  - Se a pessoa escolher *Nenhum* e o cartão continuar aberto, avisar: "Este cartão vai ficar sem próximo passo".
+- **Remarcar**: atalhos *Daqui a 1h*, *Amanhã neste horário*, *Próxima segunda* e *Escolher*. Registra no histórico a data antiga e a nova.
 
-- **Cada orçamento tem a sua conversa.** Não existe chat solto sem pedido nesta versão.
-- No celular, tela inteira com o campo de mensagem visível mesmo com o teclado aberto. No desktop, painel lateral.
-- Mensagens em ordem cronológica, diferenciando cliente e loja, com horário e estados **enviando**, **enviada** e **falhou (tentar de novo)**. O texto digitado é preservado se o envio falhar.
-- **Fotos nas duas direções:** JPG, PNG ou WebP, até 5 MB, com pré-visualização e progresso. Ao tocar, a foto amplia.
-- Mostrar a **etapa atual** do orçamento em linguagem da cliente: "Aguardando a loja", "Em atendimento", "Orçamento enviado", "Pedido confirmado", "Encerrado".
-- **Fora do horário de atendimento**, uma faixa discreta: "Respondemos a partir de amanhã, 9h". As mensagens continuam sendo aceitas.
-- Um botão **Meus pedidos** lista os orçamentos da cliente naquela loja, para ela voltar a qualquer um.
+**Filtros e contadores no topo:**
 
-### Voltar para a conversa (requisito central)
+- **Responsável**: *Minhas* (padrão), *Todos* ou uma pessoa.
+- Contadores clicáveis: **Atrasados**, **Para hoje**, **Concluídos hoje** e **Sem próximo passo**.
+- Busca por nome ou telefone do cliente.
 
-- Quando a loja responde e a cliente **não está com a conversa aberta**, ela recebe um e-mail "A Doceria Horizonte respondeu seu pedido", com um trecho da resposta e o botão **Abrir conversa**.
-- O botão é um **link mágico**: em qualquer aparelho ou navegador, a cliente entra autenticada e cai direto na conversa daquele orçamento.
-- **No máximo um e-mail a cada 30 minutos por orçamento.**
-- Na vitrine, o link **"Já fiz um pedido"** pede o e-mail e envia um novo link mágico (com limite de tentativas).
-- **Segurança:** digitar um e-mail ou telefone **nunca** libera o histórico. Só quem clica no link enviado àquele e-mail acessa os orçamentos dele. Use sessão anônima do Supabase Auth para a visitante e gere o link mágico no backend (por exemplo, `auth.admin.generateLink`), enviando-o pelo Resend.
+**Visão da equipe** (só para o dono, um botão em Hoje): tabela por pessoa com atrasados, para hoje, concluídos hoje e concluídos na semana. Clicar numa pessoa filtra a tela.
 
-### Origem da visita
+**Avisos sem custo:**
 
-- A vitrine aceita `?origem=instagram`, `?origem=whatsapp` ou `?origem=outro`. Guarde a origem da primeira visita no navegador.
-- Registre **visitas anônimas por dia e por origem**, sem dados pessoais nem cookies de terceiros. O orçamento guarda a origem.
+- O número de atrasados + para hoje aparece no **título da aba** e no **ícone do app instalado** (Badging API, quando o navegador suporta).
+- Com o app aberto, quando um compromisso chega na hora, aparece um aviso na tela e, se a pessoa permitir, uma **notificação do navegador** (Notification API local, sem servidor de push).
 
-## 5. Painel da loja
+### 4.2 Quadro
 
-**Rota:** `/painel`, com login por e-mail e senha. Navegação: **Orçamentos**, **Produtos** e **Configurações**. Abre em **Orçamentos**.
+- Colunas = etapas do negócio. Etapas padrão: **Novo**, **Em andamento**, **Aguardando cliente** e **Concluído**.
+- Cada etapa tem um **tipo**: *aberta*, *concluída* ou *perdida*. Os contadores e a regra "sem próximo passo" usam o tipo, não o nome. O dono pode criar uma etapa do tipo *perdida* (ex.: "Cancelado").
+- O dono **renomeia, cria, reordena e arquiva** etapas em Configurações. Não é possível apagar uma etapa com cartões: é preciso movê-los antes.
+- Cartão no quadro: título, cliente, responsável (avatar com iniciais), valor (se houver) e o **próximo compromisso** com data. Selo vermelho **Atrasado** ou selo cinza **Sem próximo passo**.
+- Arrastar entre colunas no desktop. No celular e no teclado, seletor **Mover para**.
+- Colunas do tipo *concluída* e *perdida* mostram só os últimos 30 dias, com link "Ver todos".
+- Topo: busca, filtro por responsável e total de valor por coluna (apenas valores preenchidos).
 
-### Orçamentos (tela principal: caixa de conversas)
+### 4.3 Ficha do cartão
 
-No desktop, três colunas. No celular, sequência de telas com botão de voltar.
+Abre como painel lateral no desktop e tela inteira no celular.
 
-1. **Lista de orçamentos**, cada item com: nome da cliente, produto, data da festa, etapa, responsável, trecho da última mensagem, horário e indicador de não lida. Ordenada pela atividade mais recente.
-   - Filtros: **Aguardando resposta** (última mensagem é da cliente), **Novo pedido**, **Em atendimento**, **Orçamento enviado**, **Confirmado**, **Perdido**, **Todos**. Abre em **Aguardando resposta**, com o número de itens em cada filtro.
-   - Busca por nome da cliente ou produto.
-2. **Conversa** com o cartão do pedido no topo, histórico, fotos e campo de resposta com envio de foto. A resposta chega à cliente em tempo real. Cada mensagem da loja mostra quem respondeu.
-3. **Ficha do orçamento**: cliente (nome, e-mail, telefone, origem), produto, quantidade, opções, data da festa, entrega ou retirada com endereço, observações, foto de referência, **etapa**, **responsável**, **valor combinado** (opcional, preenchido pela equipe) e **observações internas** (só a equipe vê). Também mostra os **outros orçamentos** da mesma cliente.
+- **Cabeçalho**: título editável, cliente (link para a ficha), botões **WhatsApp** e **Ligar** (`tel:`).
+- **Campos**: etapa, responsável, valor (opcional, em R$) e observações.
+- **Compromissos**: próximos passos e agendamentos pendentes, com Concluir e Remarcar, mais **+ Próximo passo** e **+ Agendamento**.
+- **Histórico** (mais recente primeiro): criação, mudanças de etapa, responsável e valor (com antes e depois), compromissos criados, remarcados e concluídos com o resultado, WhatsApp aberto e notas. Cada linha mostra **quem** e **quando**.
+- Campo **Adicionar nota** no histórico, para registrar o que foi combinado.
 
-**Etapas e responsável:**
+### 4.4 Agendamento e lembrete de confirmação
 
-| Etapa | Quando |
-|---|---|
-| **Novo pedido** | A cliente enviou o pedido. |
-| **Em atendimento** | Automática na primeira resposta da equipe. Quem respondeu vira a responsável. |
-| **Orçamento enviado** | A equipe marca ao passar o valor. |
-| **Confirmado** | A equipe marca quando o pedido fecha. |
-| **Perdido** | A equipe marca, com motivo: Sem agenda na data, Preço, Sem resposta da cliente, Desistiu, Outro. |
+- Campos: cliente, cartão (existente ou novo, criado no mesmo formulário), título do serviço, **data e hora de início**, **duração** (atalhos 30 min, 1h, 1h30, 2h), responsável e observações.
+- **Lembrete de confirmação**, ligado por padrão para os segmentos de horário marcado: sugestão **no dia anterior às 10h** (configurável por negócio). Se o agendamento for para o dia seguinte e já passou das 10h, sugerir "Hoje, daqui a 1h". Dá para mudar ou desligar.
+- Estados do agendamento: **Marcado**, **Confirmado**, **Realizado**, **Faltou** e **Cancelado**.
+- Concluir a confirmação com *Confirmado* marca o agendamento como Confirmado. *Cancelou* marca como Cancelado e pergunta se quer agendar outro horário.
+- **Conflito de horário**: ao marcar, avisar se o responsável já tem outro agendamento que se sobrepõe ("Mariana já tem horário das 14h às 15h"). Apenas avisar, sem bloquear.
 
-- Ações na ficha: **Mudar etapa** (seletor, funciona no celular e no teclado) e **Trocar responsável**.
-- Registrar cada mudança de etapa e de responsável com data, hora, valor anterior, novo valor e autor. Mostrar esse histórico na ficha.
-- Se uma atualização falhar, voltar ao valor anterior na tela e explicar.
+### 4.5 Agenda
 
-**Avisos para a equipe:**
+- Visão **Dia** (padrão no celular) e **Semana** (padrão no desktop), com setas e botão **Hoje**.
+- Mostra **agendamentos** em blocos pela duração, coloridos pelo estado (com rótulo em texto). Um botão liga e desliga os **próximos passos** como marcadores menores.
+- Filtro por responsável. Na semana, uma linha por responsável quando houver mais de uma pessoa (opcional).
+- Tocar num horário vazio cria um agendamento naquele horário. Tocar num bloco abre o cartão.
 
-- Com o painel aberto: **som** e **contador de não lidas no título da aba**.
-- **Alarme por e-mail:** se a mensagem de uma cliente ficar sem resposta por **X minutos** (padrão **5**, configurável), enviar um e-mail para o endereço de avisos da loja com nome, produto, trecho e link do orçamento. Um alarme por mensagem pendente.
-- O prazo só conta **dentro do horário de atendimento**. Mensagens fora do horário geram o alarme na abertura.
-- Botão **Excluir dados da cliente**, com confirmação: apaga dados pessoais, mensagens e fotos dela naquela loja.
+### 4.6 Clientes
 
-### Produtos
+- Lista com busca por **nome ou telefone** (com ou sem máscara, com ou sem DDD 55). Mostra cartões abertos e o próximo compromisso.
+- **Ficha do cliente**: dados, botões WhatsApp e Ligar, lista de cartões (abertos e encerrados) e **histórico unificado** de todos os cartões.
+- **Botão + Novo atendimento** na ficha, já com o cliente preenchido.
+- **Telefone**: aceitar `(11) 98765-4321`, `11987654321` ou `+55 11 98765-4321` e salvar normalizado (E.164). Ao cadastrar, se o telefone já existir no negócio, mostrar "Este telefone já é de Carlos Souza" com **Usar este cliente**.
 
-- Cadastrar, editar, publicar e despublicar.
-- Campos: **nome, categoria, descrição, foto, tipo de preço** (unitário, a partir de, por cento, por kg, sob encomenda), **valor**, **unidade**, **quantidade mínima** (opcional), **antecedência em dias** (opcional; sem valor, vale o padrão da loja) e **grupos de opções** (nome, opções, escolha única ou múltipla, mínimo e máximo).
-- Fotos no Storage, com validação e progresso.
-- Categorias: criar, renomear, reordenar.
-- **Copiar link da vitrine** com seletor de origem (Instagram, WhatsApp, Outro) e **Abrir minha vitrine**.
+### 4.7 WhatsApp por link
 
-### Configurações
+- O botão abre `https://wa.me/55DDDNUMERO?text=MENSAGEM` em nova aba (no celular, abre o app).
+- **Mensagens prontas** por tipo (Confirmação de horário, Retorno de orçamento, Aviso de serviço pronto, Genérica), editáveis pelo dono, com variáveis: `{cliente}`, `{primeiro_nome}`, `{servico}`, `{data}`, `{hora}`, `{valor}`, `{negocio}`, `{responsavel}`.
+- Antes de abrir, mostrar a mensagem preenchida num campo editável, com **Abrir WhatsApp** e a opção de trocar o modelo. A pessoa revisa e envia no próprio WhatsApp.
+- Registrar no histórico "WhatsApp aberto por Mariana (Confirmação de horário)".
+- Ao voltar para o Retoma depois de abrir o WhatsApp a partir de um compromisso, mostrar a folha **Concluir** daquele compromisso (pode ser fechada).
+- Sem telefone cadastrado, o botão vira **Adicionar telefone**.
 
-- Nome, frase de apresentação e slug.
-- **Identidade visual da vitrine:** logo, **cor principal** (com prévia ao vivo e aviso de contraste ruim) e **foto de capa**.
-- **Horário de atendimento** por dia da semana.
-- **Antecedência padrão** em dias.
-- **Modalidades:** entrega, retirada ou ambas.
-- **Prazo do alarme** em minutos (padrão 5) e **e-mail de avisos**.
-- **Equipe:** convidar, listar e remover vendedoras (só o dono).
+### 4.8 Novo atendimento
 
-O painel pode ser **instalado na tela inicial** do celular (PWA com manifest e ícone).
+Um único formulário curto:
 
-## 6. Regras de backend
+1. **Cliente**: busca por nome ou telefone; se não achar, criar ali mesmo com nome e telefone.
+2. **Título** do atendimento.
+3. **Valor** (opcional).
+4. **Etapa** (padrão: a primeira etapa aberta) e **Responsável** (padrão: quem está criando).
+5. **Próximo passo**: atalhos *Hoje mais tarde*, *Amanhã*, *Em 2 dias*, *Escolher*, ou **Marcar agendamento**. Pode ficar vazio, mas o cartão vai para "Sem próximo passo".
+6. **Observações**.
 
-Em banco ou Edge Functions, para funcionar com várias abas e vendedoras ao mesmo tempo:
+Salvar volta para a tela de origem.
 
-1. **Envio do pedido:** em uma transação, criar ou reaproveitar o **contato** (por sessão da visitante e loja), criar o **orçamento** em **Novo pedido** com origem e uma **cópia** do nome do produto, preço exibido e opções escolhidas, criar a **conversa** vinculada e salvar o cartão do pedido como primeira mensagem. A equipe vê o orçamento sem recarregar.
-2. **Primeira resposta:** define a responsável e muda **Novo pedido → Em atendimento**, uma única vez, mesmo com duas vendedoras respondendo ao mesmo tempo.
-3. **Mudanças de etapa** só pela equipe da loja, sempre registradas no histórico.
-4. **Envio sem duplicar:** cada envio leva um identificador gerado no cliente. Clique duplo ou nova tentativa não duplicam pedido, conversa ou mensagem.
-5. **Reconexão:** mostrar quando a conexão cai; ao voltar, buscar as mensagens do intervalo e retomar o tempo real.
-6. **Validação:** loja, produto publicado, quantidade mínima, data mínima, dias de funcionamento, opções, tamanho das mensagens, tipo e tamanho das fotos. Limitar envios repetitivos.
-7. **Métricas:** registrar `visita` (com origem), `pedido_enviado`, `email_resposta_enviado` e `retorno_pelo_email` (quando a cliente abre o link mágico).
+### 4.9 Configurações (dono)
 
-## 7. Dados e privacidade
+- Dados do negócio: nome, segmento e fuso.
+- **Etapas**: renomear, criar, reordenar, definir tipo e arquivar.
+- **Mensagens prontas**: editar os modelos com prévia preenchida.
+- **Lembrete de confirmação padrão**: ligado ou desligado, quantos dias antes e a que horas.
+- **Equipe**: convidar (e-mail ou link), mudar papel e remover.
 
-Entidades: **lojas, membros, administradores da plataforma, categorias, produtos, grupos de opções, opções, contatos, orçamentos, conversas, mensagens, anexos, histórico de etapas, eventos de métrica**. Todas as de negócio com `loja_id`.
+## 5. Regras de backend
 
-- **Leitura pública:** só dados públicos da loja, categorias e produtos publicados.
-- A cliente acessa **apenas os próprios orçamentos, mensagens e fotos**. Nunca vê observações internas, valor combinado interno, histórico de etapas, outros contatos ou dados da equipe.
-- A cliente não pode mudar etapa ou responsável nem enviar mensagem em nome da loja.
-- Fotos em bucket **privado**, servidas por URL assinada temporária.
-- Página **/privacidade** simples: dados coletados, finalidade, armazenamento e como pedir a exclusão.
+1. Concluir com próximo passo e mudança de etapa é **uma transação** (função no banco). Se falhar, nada muda e a tela explica.
+2. Toda mudança de etapa, responsável, valor e compromisso grava uma linha de **histórico** com autor, data, valor anterior e novo valor (trigger no banco).
+3. Cada envio leva um identificador gerado no cliente. Clique duplo não cria cartão, cliente ou compromisso duplicado.
+4. Atualizações concorrentes: se duas pessoas concluem o mesmo compromisso, a segunda vê "Já concluído por Mariana às 10:42".
+5. Validar `negocio_id` e permissões no banco. A equipe não altera etapas nem configurações; ninguém acessa dados de outro negócio.
+6. Datas gravadas em UTC; exibidas no fuso do negócio.
 
-## 8. Design
+## 6. Design
 
-**A vitrine tem a cara da loja e dá vontade de encomendar. O painel tem a cara do Retoma e ajuda a responder rápido.**
+**Objetivo: em 5 segundos a pessoa sabe o que fazer agora.**
 
-### Vitrine
-
-- Usa **logo, cor principal e foto de capa** da loja. A cor principal aparece em botões, links, abas ativas e destaques.
-- Fixos: superfícies **creme (#FBF6F0)**, texto **cacau (#3B2A25)**, espaçamentos e cantos arredondados. Gerar variações da cor principal e escolher texto claro ou escuro sobre ela pelo contraste.
-- **Sempre clara.**
-- **Fraunces** nos títulos (nome da loja, seções, nome do produto) e **Inter** no resto, inclusive preços, datas e formulários.
-- Rodapé discreto: **"Atendimento por Retoma"**.
-
-### Painel
-
-- Fundo **off-white (#F7F7F5)**, superfícies brancas, **cinza quente** nos secundários, texto **grafite (#1F2421)** e destaque **verde-oliva (#5B6B3A)** para ações principais, item ativo e não lidas.
-- **Modo escuro** seguindo o sistema, com alternância manual.
-- Só **Inter**.
-- Menu lateral no desktop e inferior no celular. Composição compacta.
-
-### Regras gerais
-
-- Cores de apoio só para estados (sucesso, erro, atenção). Etapas com rótulo em texto, nunca só por cor.
-- Português do Brasil: **R$ 180,00**, **1.000 unidades**, **sáb., 14/12**.
+- Fundo **off-white (#F7F7F5)**, superfícies brancas, **cinza quente** nos secundários, texto **grafite (#1F2421)** e destaque **verde-oliva (#5B6B3A)** em ações principais, item ativo e Concluído.
+- **Atrasado** em vermelho tijolo, **Hoje** em âmbar e **Confirmado** em verde, sempre acompanhados de rótulo em texto.
+- **Inter** em toda a interface. **Modo escuro** seguindo o sistema, com alternância manual.
+- No celular: botões de ação com pelo menos 44 px, ações principais ao alcance do polegar e folhas que sobem de baixo para Concluir e Remarcar.
+- Português do Brasil: **R$ 650,00**, **sex., 14/03 às 14:00**, "há 2 dias", "amanhã".
 - Rótulos curtos, sem slogans nem métricas decorativas.
-- Contraste adequado, foco visível, rótulos nos campos, navegação por teclado, alvos de toque confortáveis.
-- Estados vazios, carregamento, erro e sucesso. Nunca mostrar sucesso antes de salvar.
+- Estados vazios úteis. Ex.: em Hoje, "Nada atrasado. Próximo compromisso: amanhã às 9h, Carlos Souza".
+- Contraste adequado, foco visível, rótulos nos campos e navegação por teclado. Tudo que é feito arrastando também pode ser feito por botão.
+- Carregamento, erro e sucesso tratados. Nunca mostrar sucesso antes de salvar.
 
-## 9. Dados de demonstração
+## 7. Dados de demonstração
 
-- **Administrador da plataforma** de demonstração.
-- Loja **Doceria Horizonte** (`doceria-horizonte`): cor **terracota suave (#C8664B)**, logo simples, capa com mesa de doces, terça a sábado das 9h às 18h, antecedência padrão de 2 dias, entrega e retirada. **Uma dona e uma vendedora** de demonstração.
-- Produtos com fotos coerentes:
-  - **Bolos:** Bolo de aniversário (a partir de R$ 90,00 o kg, mínimo 1 kg, antecedência de 3 dias, grupos Massa, Recheio e Cobertura), Bolo de pote (R$ 12,00 a unidade).
-  - **Docinhos:** Brigadeiro gourmet (R$ 150,00 o cento, mínimo 25, grupo Sabores de múltipla escolha), Bem-casado (R$ 4,50 a unidade, mínimo 50).
-  - **Kits festa:** Kit festa para 20 pessoas (a partir de R$ 220,00), Mesa de doces personalizada (sob encomenda).
-- Alguns orçamentos fictícios em etapas diferentes, marcados discretamente como exemplo.
-- Uma **segunda loja** mínima (ex.: **Ateliê Aurora**, com 2 produtos) para testar o isolamento.
+Crie dois negócios, com datas **relativas ao dia atual** (para a demonstração sempre ter itens em Atrasados, Hoje e Próximos). Em `/admin`, um botão **Recriar dados de demonstração** apaga e recria esses dois negócios com datas atualizadas.
 
-## 10. Critérios de aceite
+**Assistência técnica "Conserta Já"** (dono: Rafael; equipe: Bruno)
+- Etapas: Novo, Em análise, Orçamento enviado, Aguardando cliente, Em conserto, Pronto para retirada, Concluído e Cancelado (perdida).
+- Mensagens prontas: Retorno de orçamento ("Oi {primeiro_nome}, aqui é o {responsavel} da {negocio}. O orçamento do {servico} ficou em {valor}. Posso seguir com o conserto?") e Aparelho pronto.
+- 8 cartões variados, incluindo um atrasado e um sem próximo passo.
 
-Percorra a aplicação de verdade e corrija o que falhar:
+**Salão "Studio Lírio"** (dona: Camila; equipe: Mariana e Júlia)
+- Etapas: Novo, Agendado, Confirmado, Atendido (concluída) e Cancelado (perdida).
+- Mensagem pronta de confirmação: "Oi {primeiro_nome}! Aqui é do {negocio}. Passando para confirmar seu horário de {servico} {data} às {hora}. Posso confirmar? 💇‍♀️"
+- Agendamentos espalhados na semana, com lembretes de confirmação.
 
-- **Cenário da Ana:**
-  1. Ana abre `/loja/doceria-horizonte?origem=instagram`, escolhe **Bolo de aniversário** e pede 2 kg, massa branca, recheio de ninho com morango, cobertura de chantilly, **retirada no próximo sábado**, observação "É para o aniversário da minha filha", foto de referência, nome e e-mail.
-  2. O orçamento aparece no painel em **Novo pedido** e em **Aguardando resposta**, com som e contador na aba.
-  3. Ana fecha a página. A vendedora responde "Que lindo! Conseguimos sim. Fica R$ 180,00, pode ser?". O orçamento vai para **Em atendimento** e ela vira a responsável.
-  4. Ana recebe **um** e-mail, abre **Abrir conversa** em outro navegador, vê a resposta e escreve "Pode sim!".
-  5. A vendedora marca **Orçamento enviado** e depois **Confirmado**. O histórico mostra as duas mudanças.
-- Um pedido cria **um contato, um orçamento, uma conversa** e o cartão do pedido, com loja, produto, opções, data e origem corretos.
-- Calendário e backend recusam data antes da antecedência e em dia fechado.
-- Clique duplo e nova tentativa não duplicam nada.
-- Várias respostas em 30 minutos geram só um e-mail.
-- Duas vendedoras respondendo ao mesmo tempo: só uma vira responsável, e a etapa muda uma vez.
-- Alarme de "sem resposta" respeita o prazo e o horário.
-- Duas visitantes: cada uma vê só os próprios orçamentos. Digitar o e-mail de outra pessoa não dá acesso.
-- Duas lojas: a equipe de uma não vê nada da outra, nem pelo Realtime nem pelo Storage.
-- **Excluir dados da cliente** remove dados pessoais, mensagens e fotos.
-- O painel instala como app no celular.
+## 8. Critérios de aceite
 
-**Entrega:** diga como abrir a vitrine, o painel e o `/admin`, quais são os logins de demonstração, como rodar o cenário da Ana e o que depende de configuração manual no Lovable Cloud (chave do Resend, domínio de envio, agendamento do alarme).
+**Caso 1: assistência técnica**
+1. Bruno cria "Troca de tela – iPhone 12" para o cliente **Carlos Souza**, com valor **R$ 650,00**, etapa **Orçamento enviado** e próximo passo "Retornar sobre o orçamento" na **próxima sexta às 10h**.
+2. O compromisso aparece em **Próximos** e, na sexta, em **Hoje**. Depois das 10h, passa para **Atrasados**.
+3. Em Hoje, Bruno toca em **WhatsApp**, revisa a mensagem com nome, serviço e valor preenchidos e abre o WhatsApp.
+4. Ao voltar, conclui com **Aprovou**, muda a etapa para **Em conserto** e agenda "Avisar que está pronto" para dali a 2 dias, tudo num só **Salvar**.
+5. O histórico do cartão mostra cada passo com autor e horário.
+
+**Caso 2: salão**
+1. Mariana marca para **Ana Lima** "Escova + hidratação" na **sexta às 14h**, 1h30. O lembrete de confirmação é sugerido para **quinta às 10h**.
+2. Na quinta, **Confirmar horário – Ana Lima – sex. 14:00** aparece em Hoje. Mariana abre o WhatsApp com a mensagem de confirmação.
+3. Conclui com **Confirmado**: o agendamento fica Confirmado na Agenda.
+4. Na sexta depois das 15h30, o agendamento aparece em "Como foi?". Mariana marca **Realizado** e o cartão vai para **Atendido**.
+
+**Gerais**
+- Dono e equipe de um negócio não veem nada do outro, nem pelo Realtime.
+- Contadores de Atrasados, Para hoje, Concluídos hoje e Sem próximo passo batem com as listas.
+- Concluir no celular, do toque em Concluir ao Salvar com próximo passo, leva no máximo **3 toques** usando os atalhos.
+- Remarcar registra datas antiga e nova no histórico.
+- Etapas renomeadas e reordenadas aparecem no Quadro e nos seletores; contadores continuam corretos.
+- Telefone duplicado é detectado. Busca acha "98765" e "Carlos".
+- Uma mudança feita numa janela aparece na outra sem recarregar.
+
+**Entrega:** diga como acessar `/admin`, os logins de demonstração dos dois negócios, como recriar os dados de demonstração e como reproduzir os dois casos.

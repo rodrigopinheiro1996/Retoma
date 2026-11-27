@@ -1,5 +1,7 @@
 # Retoma: decisões do produto
 
+> **Mudança de direção (27/11/2026):** o piloto passou a ser um CRM de **cartões, tela Hoje e agenda** para vários segmentos (salões, assistências, oficinas, gráficas, lojas, serviços), com WhatsApp por link e sem custo de e-mail ou API. Vitrine, chat próprio e link mágico ficam fora do piloto (aguardando decisão). O prompt atual está em [prompt-fase-1.md](prompt-fase-1.md) e as propostas em [piloto-propostas.html](piloto-propostas.html). O conteúdo abaixo registra o plano anterior.
+
 Resultado da sessão de perguntas (grill-me) sobre o projeto. Cada item registra o que foi decidido e por quê.
 
 ## Visão

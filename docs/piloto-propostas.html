@@ -1,0 +1,178 @@
+<title>Retoma piloto</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout: coluna única de leitura, seções empilhadas, tabelas viram cartões no celular */
+:root{
+  --bg:#F7F7F5; --surface:#FFFFFF; --fg:#1F2421; --muted:#6B6A63; --line:#E3E1DA;
+  --accent:#5B6B3A; --accent-soft:#EEF1E6;
+  --warn:#9A5B12; --warn-soft:#FBF0E0;
+  --late:#A33A2B; --late-soft:#F8E7E3;
+  --ok:#2F6B45; --ok-soft:#E5F1E9;
+  --display:"Space Grotesk",system-ui,sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#151815; --surface:#1D211D; --fg:#E9EAE5; --muted:#A3A49C; --line:#30352F;
+  --accent:#A9BC7E; --accent-soft:#283020; --warn:#E3A957; --warn-soft:#33281A;
+  --late:#F08A78; --late-soft:#3A221E; --ok:#7CC796; --ok-soft:#1E3326; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151815; --surface:#1D211D; --fg:#E9EAE5; --muted:#A3A49C; --line:#30352F;
+  --accent:#A9BC7E; --accent-soft:#283020; --warn:#E3A957; --warn-soft:#33281A;
+  --late:#F08A78; --late-soft:#3A221E; --ok:#7CC796; --ok-soft:#1E3326; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1,h2{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0}
+h1{font-size:30px;letter-spacing:-.01em}
+h2{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);max-width:64ch;margin-top:8px}
+header{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+section{display:flex;flex-direction:column;gap:14px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-head p{color:var(--muted)}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.c-dec{background:var(--warn-soft);color:var(--warn)}
+.c-pil{background:var(--ok-soft);color:var(--ok)}
+.c-dep{background:var(--accent-soft);color:var(--accent)}
+.c-no{background:var(--late-soft);color:var(--late)}
+.list{display:grid;grid-template-columns:1fr;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr);gap:6px 24px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row b{font-weight:600}
+.row .gain{color:var(--muted)}
+.decide{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.card h3{font-family:var(--display);font-size:16px;font-weight:600;margin:0}
+.kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 14px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.rec{border-left:3px solid var(--accent);padding-left:10px;font-size:14px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:680px}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600}
+.legend{display:flex;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);align-items:center}
+@media (max-width:640px){
+  h1{font-size:25px}
+  .row{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr}
+  .kv dt{margin-top:4px}
+}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Revisão do piloto · 27/11/2026</span>
+  <h1>Retoma: cartões, Hoje e agenda</h1>
+  <p class="lead">O que mudei no prompt, o que precisa da sua decisão e ideias para a loja continuar pagando. O prompt completo está em <code>docs/prompt-fase-1.md</code>.</p>
+</header>
+
+<section>
+  <div class="sec-head">
+    <h2>Precisa da sua decisão</h2>
+    <p>Mudam o fluxo, o custo ou dependem de integração. Nada disso está no prompt.</p>
+  </div>
+  <div class="decide">
+
+    <div class="card">
+      <div class="card-top"><h3>A. Vitrine, chat e link mágico saem do piloto</h3><span class="chip c-dec">Decidir</span></div>
+      <dl class="kv">
+        <dt>Por quê</dt><dd>O link mágico dependia do envio de e-mail (Resend), que você tirou. Sem ele, o cliente não volta para a conversa em outro aparelho. O novo fluxo usa o WhatsApp por link, então o chat próprio deixa de ser necessário.</dd>
+        <dt>Custo</dt><dd>Nenhum.</dd>
+      </dl>
+      <p class="rec">Recomendo guardar como módulo futuro “Pedidos online”. O trabalho de antes fica em <code>docs/decisoes.md</code>.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><h3>B. Aviso no celular com o Retoma fechado</h3><span class="chip c-dec">Decidir</span></div>
+      <dl class="kv">
+        <dt>Problema</dt><dd>No prompt, o lembrete só aparece com o Retoma aberto. Quem está atendendo e não abre o app perde o horário. É o maior risco de um compromisso passar despercebido.</dd>
+        <dt>Como funciona</dt><dd>Notificação “Confirmar horário – Ana Lima – 10h” no celular, como a de qualquer app.</dd>
+        <dt>Custo</dt><dd>Web Push dos navegadores é gratuito. Precisa de uma função agendada no Lovable Cloud a cada minuto (cabe no plano gratuito, mas não tenho certeza do limite atual). No iPhone, só funciona com o app instalado na tela inicial (iOS 16.4 ou mais novo).</dd>
+      </dl>
+      <p class="rec">Recomendo entrar logo depois do piloto básico funcionar, ainda antes de mostrar para o primeiro cliente.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><h3>C. Resumo do dia por e-mail às 8h</h3><span class="chip c-dep">Depois</span></div>
+      <dl class="kv">
+        <dt>Problema</dt><dd>O dono quer saber o dia antes de abrir o app.</dd>
+        <dt>Custo</dt><dd>Precisa de serviço de e-mail. Resend tem plano gratuito, mas você pediu para não usar.</dd>
+      </dl>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><h3>D. Confirmação automática para o cliente pelo WhatsApp</h3><span class="chip c-dep">Depois · plano pago</span></div>
+      <dl class="kv">
+        <dt>Problema</dt><dd>Confirmar um a um ainda dá trabalho em salão cheio.</dd>
+        <dt>Custo</dt><dd>API oficial da Meta, cobrada por mensagem de modelo. Faz sentido como plano mais caro do Retoma, repassando o custo.</dd>
+      </dl>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><h3>E. Página para o cliente marcar sozinho</h3><span class="chip c-dep">Depois</span></div>
+      <dl class="kv">
+        <dt>Problema</dt><dd>Salão e oficina perdem tempo combinando horário.</dd>
+        <dt>Uso</dt><dd>Link na bio do Instagram. O cliente escolhe serviço e horário livre, e o Retoma cria o cartão e o agendamento.</dd>
+        <dt>Por que esperar</dt><dd>Muda o fluxo principal e exige regras de disponibilidade por profissional.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>Melhorias que já coloquei no prompt</h2>
+    <p>Pequenas, reversíveis e sem custo. Basta pedir para tirar qualquer uma.</p>
+  </div>
+  <div class="list">
+    <div class="row"><b>Selo “Sem próximo passo”</b><span class="gain">Cartão aberto sem nada marcado aparece em Hoje e no Quadro. É onde o cliente costuma ser esquecido.</span></div>
+    <div class="row"><b>Concluir, registrar, agendar o próximo e mudar a etapa num só Salvar</b><span class="gain">Até 3 toques no celular, sem abrir o cartão.</span></div>
+    <div class="row"><b>Resultados rápidos por tipo</b><span class="gain">“Confirmado”, “Sem resposta”, “Aprovou” etc. sugerem o próximo passo e a etapa. Menos digitação e histórico padronizado.</span></div>
+    <div class="row"><b>“Como foi?” depois do horário</b><span class="gain">Agendamento que já passou pede Realizado, Faltou ou Remarcar. Sem isso, o horário passa e fica em aberto.</span></div>
+    <div class="row"><b>Lembrete de confirmação sugerido sozinho</b><span class="gain">Dia anterior às 10h, ajustável. Se o horário é amanhã e já passou das 10h, sugere daqui a 1h.</span></div>
+    <div class="row"><b>Ao voltar do WhatsApp, abre o Concluir</b><span class="gain">A pessoa registra o que aconteceu na hora, antes de esquecer.</span></div>
+    <div class="row"><b>Registro automático “WhatsApp aberto”</b><span class="gain">O histórico mostra quem chamou o cliente e com qual mensagem.</span></div>
+    <div class="row"><b>Mensagens prontas com variáveis e prévia editável</b><span class="gain">Nome, serviço, data, hora e valor preenchidos. A pessoa só revisa.</span></div>
+    <div class="row"><b>Remarcar com atalhos</b><span class="gain">Daqui a 1h, amanhã neste horário, próxima segunda. Datas antiga e nova ficam no histórico.</span></div>
+    <div class="row"><b>Aviso de conflito de horário</b><span class="gain">Avisa quando o profissional já tem outro horário marcado. Não bloqueia.</span></div>
+    <div class="row"><b>Telefone normalizado e cliente duplicado detectado</b><span class="gain">Busca acha com ou sem máscara. Evita dois cadastros da mesma pessoa.</span></div>
+    <div class="row"><b>Contador na aba, no ícone do app e notificação local</b><span class="gain">Custo zero. Funciona com o Retoma aberto (ver decisão B).</span></div>
+    <div class="row"><b>Tipo de etapa: aberta, concluída ou perdida</b><span class="gain">O negócio renomeia à vontade sem quebrar os contadores.</span></div>
+    <div class="row"><b>Modelos por segmento</b><span class="gain">Salão, assistência, oficina, gráfica, loja e serviços já começam com etapas e mensagens prontas.</span></div>
+    <div class="row"><b>Convite da equipe por link</b><span class="gain">Manda pelo WhatsApp, sem depender de e-mail.</span></div>
+    <div class="row"><b>Visão da equipe para o dono</b><span class="gain">Atrasados, para hoje e concluídos por pessoa.</span></div>
+    <div class="row"><b>Concluídos e cancelados mostram só 30 dias no Quadro</b><span class="gain">O quadro não fica lotado com o passar dos meses.</span></div>
+    <div class="row"><b>Dados de demonstração com datas relativas</b><span class="gain">A demo sempre tem itens atrasados, de hoje e próximos. Botão para recriar antes de cada apresentação.</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2>Ideias para a loja continuar pagando</h2>
+    <div class="legend"><span class="chip c-pil">Piloto</span> cabe sem custo novo <span class="chip c-dep">Depois</span> após validar o piloto</div>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Ideia</th><th>Problema que resolve</th><th>Como seria usada</th><th>Quando</th></tr></thead>
+      <tbody>
+        <tr><td>Retorno de pós-venda</td><td>O cliente some depois do serviço e não volta.</td><td>Ao concluir, “Chamar de novo em 30 dias” (salão) ou “Revisão em 6 meses” (oficina). Vira um próximo passo comum.</td><td><span class="chip c-pil">Piloto</span></td></tr>
+        <tr><td>Selo de faltas</td><td>Cliente que falta sempre ocupa horário.</td><td>Ficha mostra “Faltou 2 vezes”. Ao marcar, aparece o aviso.</td><td><span class="chip c-pil">Piloto</span></td></tr>
+        <tr><td>Confirmar em sequência</td><td>Confirmar 15 horários de amanhã, um por um, cansa.</td><td>Botão “Confirmar os de amanhã” abre o WhatsApp de cada cliente em fila, com Concluir entre um e outro.</td><td><span class="chip c-dep">Depois</span></td></tr>
+        <tr><td>Clientes sumidos</td><td>Ninguém lembra de quem não aparece há meses.</td><td>Lista “Sem atendimento há 60 dias”, com WhatsApp e mensagem de reativação.</td><td><span class="chip c-dep">Depois</span></td></tr>
+        <tr><td>Relatório do mês</td><td>O dono não sabe se está vendendo mais.</td><td>Orçamentos aprovados e recusados, valor fechado, faltas e tempo até a primeira resposta.</td><td><span class="chip c-dep">Depois</span></td></tr>
+        <tr><td>Campos por segmento</td><td>Assistência precisa de aparelho e defeito; oficina, de placa e km.</td><td>O dono cria campos extras no cartão, que aparecem na busca.</td><td><span class="chip c-dep">Depois</span></td></tr>
+        <tr><td>Ordem de serviço</td><td>Assistência e oficina entregam papel escrito à mão.</td><td>Gera a OS do cartão para mandar por WhatsApp como imagem.</td><td><span class="chip c-dep">Depois</span></td></tr>
+        <tr><td>Importar contatos</td><td>Cadastrar a carteira à mão desanima no primeiro dia.</td><td>Envia planilha (CSV) ou exporta dos contatos do celular.</td><td><span class="chip c-dep">Depois</span></td></tr>
+        <tr><td>Comissão por profissional</td><td>Salão calcula comissão no caderno.</td><td>Valor realizado por pessoa no mês, com percentual configurável.</td><td><span class="chip c-dep">Depois</span></td></tr>
+        <tr><td>Pedidos online</td><td>Cliente quer pedir sem esperar resposta no WhatsApp.</td><td>O módulo de vitrine e chat do plano anterior.</td><td><span class="chip c-dep">Depois</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+</div>
