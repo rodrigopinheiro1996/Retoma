@@ -113,3 +113,11 @@ Leitura manual dos itens:
 5. **Clientes que param de responder viraram tema de vídeos de vendas,** com pouco alcance. [TikTok](https://www.tiktok.com/@thiagoconcer/video/7709573048021585172)
 
 Conclusão: nos últimos 30 dias, não há evidência pública de que vendedores busquem ou paguem por uma solução para esse problema. Isso não prova que a dor não exista, porque esses vendedores conversam mais no Instagram e em grupos de WhatsApp, que a ferramenta não alcança. A prova precisa vir das entrevistas.
+
+### Terceira rodada da /last30days, com a chave do ScrapeCreators (27/11/2026)
+
+- **Coleta:** TikTok com 12 vídeos, Reddit com 2 tópicos e YouTube com 1 vídeo. O Instagram não trouxe nenhum resultado.
+- **Problema nas hashtags:** quase todos os vídeos do TikTok vieram por hashtags genéricas como #vendasonline e #confeitaria, e eram ruído: receitas, anúncios e vídeos da África do Sul.
+- **Item útil:** [r/CRMSoftware, 5/11/2026](https://www.reddit.com/r/CRMSoftware/comments/1xoazga/are_businesses_losing_more_revenue_from_missed/). Um usuário conta: "perdemos alguns trabalhos quando nosso orçamentista recebia 40 a 50 mensagens de WhatsApp por dia e perdia o controle de quem pediu o quê; achávamos uma conversa de 3 semanas atrás que tinha morrido no meio". É um relato real, mas de uma empresa estrangeira com equipe, e não de um vendedor que trabalha sozinho.
+- **Concorrente brasileiro:** o canal [Rumo CRM](https://www.youtube.com/watch?v=ONZIVbMFvIY) publicou em 27/11/2026 um vídeo sobre "cliente sumiu depois do orçamento". O vídeo teve apenas 2 visualizações.
+- **Ajuste para as próximas buscas:** usar busca por palavra-chave sem hashtags genéricas, ou indicar perfis específicos de confeiteiras e lojistas.
