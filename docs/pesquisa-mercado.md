@@ -178,3 +178,14 @@ Avaliação de 28/11/2026. Fontes: [página do produto](https://getartcraft.com/
 - **Situação:** versão alfa inicial (0.6.1). É gratuito e de código aberto, com licença MIT ou Apache-2.0. O repositório foi criado em 31/10/2026 e tem 44,7 mil estrelas.
 - **Custos:** o programa é grátis, mas o agente de código é pago à parte, na conta do próprio usuário.
 - **Conclusão:** não resolve a dúvida principal do projeto, que é saber se alguém vai pagar. Pode ajudar depois da validação, no modo "clean room", que só observa o que qualquer visitante vê, para estudar o fluxo de telas de vitrines e formulários. Não deve ser usado para copiar concorrentes.
+
+### Opções gratuitas para construir com o Craft Anything (pesquisa de 28/11/2026)
+
+| Agente de código | Situação no Craft Anything | Custo |
+|---|---|---|
+| Gemini CLI, com login pela conta Google pessoal | Integração prevista (via ACP), mas ainda não testada de ponta a ponta numa construção real | Grátis: até 1.000 requisições por dia, segundo a [documentação oficial](https://geminicli.com/docs/resources/quota-and-pricing) |
+| GitHub Copilot CLI | Já construiu um projeto real | O plano Copilot Free é limitado (50 requisições premium por mês nas regras antigas). Desde 1/6/2026 a cobrança é por créditos ([GitHub](https://github.blog/changelog/2026/04/27/github-copilot-is-moving-to-usage-based-billing/)) |
+| Qwen Code | Integração prevista (via ACP) | O plano grátis foi encerrado em 15/4/2026 ([decrypt](https://decrypt.co/364501/alibaba-shuts-down-free-tier-qwen-code)) |
+| Modelos locais (Ollama ou LM Studio) | Respondem perguntas, mas o agente do próprio Craft Anything ainda não constrói projetos | Grátis, mas exige um computador potente |
+
+Recomendação: Gemini CLI com conta Google pessoal, usado direto ou dentro do Craft Anything na opção "Começar do zero". Hospedagem gratuita: Cloudflare Pages com Supabase no plano Free.
