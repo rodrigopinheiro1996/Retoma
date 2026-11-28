@@ -169,3 +169,12 @@ Levantamento de 27/11/2026. As fontes são provedores de WhatsApp, e os valores 
   - **no dia certo de retomar o contato**, quando a mensagem já aparece pronta.
 - O produto vira "mais uma tela" quando a vendedora precisa digitar cada interessado.
 - O caminho D resolve a maior parte disso sem a API e sem custo por mensagem. Hipótese a testar: os compradores aceitam preencher o link.
+
+## Ferramenta avaliada: Craft Anything (ArtCraft)
+
+Avaliação de 28/11/2026. Fontes: [página do produto](https://getartcraft.com/apps/craft-anything), [documentação](https://craft.wiki/apps/craft-anything/overview/) e o repositório `storytold/craft-anything`.
+
+- **O que é:** um programa de computador que estuda um site, um aplicativo ou um jogo e depois usa um agente de código, como o Claude Code, para criar uma versão própria. Em seguida, compara essa versão com o original.
+- **Situação:** versão alfa inicial (0.6.1). É gratuito e de código aberto, com licença MIT ou Apache-2.0. O repositório foi criado em 31/10/2026 e tem 44,7 mil estrelas.
+- **Custos:** o programa é grátis, mas o agente de código é pago à parte, na conta do próprio usuário.
+- **Conclusão:** não resolve a dúvida principal do projeto, que é saber se alguém vai pagar. Pode ajudar depois da validação, no modo "clean room", que só observa o que qualquer visitante vê, para estudar o fluxo de telas de vitrines e formulários. Não deve ser usado para copiar concorrentes.
